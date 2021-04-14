@@ -1,19 +1,18 @@
-name: C/C++ CI
+name: C++ format check
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
-  build:
-
+  check-format:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: make
-      run: make
-    - name: check-format
-      run: make check-format
+      - uses: actions/checkout@v2
+      # - name: make
+      #   run: make
+      - name: check-format
+        run: make check-format

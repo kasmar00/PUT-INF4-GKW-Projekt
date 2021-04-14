@@ -1,0 +1,13 @@
+# CPP intermediate and executable
+*.o
+*.out
+
+# docs
+*.mdj
+
+# data
+data/*.geojson
+data/*/
+
+# other
+arch

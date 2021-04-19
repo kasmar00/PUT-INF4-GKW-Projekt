@@ -2,6 +2,7 @@
 #include <unistd.h>
 
 #include "Renderer.h"
+#include "libs/shaderprogram.h"  //przykład includowania
 
 int main(int argc, char const* argv[]) {
     Renderer* renderer = new Renderer;

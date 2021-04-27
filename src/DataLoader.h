@@ -1,15 +1,15 @@
 #ifndef __DATA_LOADER_H__
 #define __DATA_LOADER_H__
 
-#include <vector>
-#include <string>
-#include <glm/glm.hpp>
 #include <fstream>
+#include <glm/glm.hpp>
 #include <iostream>
 #include <sstream>
+#include <string>
+#include <vector>
 
-typedef struct object_data{
-    std::vector<std::pair<std::string,std::string>> props;
+typedef struct object_data {
+    std::vector<std::pair<std::string, std::string>> props;
     std::vector<glm::vec2> coords;
 };
 
@@ -19,7 +19,7 @@ class DataLoader {
     DataLoader();
     ~DataLoader();
 
-    std::vector<object_data> load_file(std::string filename,int debug=0);
+    std::vector<object_data> load_file(std::string filename, int debug = 0);
 };
 
 #endif

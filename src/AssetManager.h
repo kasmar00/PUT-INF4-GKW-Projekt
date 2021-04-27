@@ -18,7 +18,6 @@ class AssetManager {
     ~AssetManager();
 
     void generate_models_from_file(std::string filename);
-
 };
 
 #endif

@@ -13,3 +13,5 @@ data/*/
 # those libs are downloaded from source (github) by makefile
 libs/lodepng.h
 libs/lodepng.cpp
+
+.vscode/

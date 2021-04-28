@@ -7,13 +7,14 @@
 #include <vector>
 
 #include "Model.h"
+#include "ModelStatic.h"
 
 class Renderer {
    private:
-    // std::vector<Model> models;
+    std::vector<ModelStatic*> models;
 
    public:
-    GLFWwindow *window;
+    GLFWwindow* window;
     Renderer();
     ~Renderer();
 

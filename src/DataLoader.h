@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-typedef struct object_data {
+struct object_data {
     std::vector<std::pair<std::string, std::string>> props;
     std::vector<glm::vec2> coords;
 };

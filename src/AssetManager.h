@@ -10,13 +10,14 @@
 class AssetManager {
    private:
     std::vector<Model*> models;
+    std::vector<object_data> data;
     AssetLoader ass_loader;
     DataLoader data_loader;
 
    public:
     AssetManager();
     ~AssetManager();
-
+    void sanity_check_load();
     void generate_models_from_file(std::string filename);
 };
 

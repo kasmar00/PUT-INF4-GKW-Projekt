@@ -31,7 +31,7 @@ std::vector<object_data> DataLoader::load_file(std::string filename, int debug) 
                 current_object->props.push_back(pair<string, string>(a, b));
                 if (debug) cout << a << '\t' << b << endl;
             }
-           } else if (line == "COORDS") {
+        } else if (line == "COORDS") {
             getline(file, line);
             if (debug) cout << "Coord count: " << line << endl;
             int cnt = stoi(line);

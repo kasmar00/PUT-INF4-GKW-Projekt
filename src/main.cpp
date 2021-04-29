@@ -13,7 +13,6 @@ int main(int argc, char const* argv[]) {
     AssetManager manager;
     manager.generate_models_from_file("data/weed/grass");
 
-
     Renderer* renderer = new Renderer;
 
     renderer->loop();

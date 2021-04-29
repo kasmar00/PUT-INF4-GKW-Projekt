@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#define GLM_FORCE_SWIZZLE
+#define GLM_FORCE_RADIANS
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -11,7 +14,14 @@
 #include "ModelBench.h"
 #include "ModelTree.h"
 #include "callbacks.h"
+#include "constants.h"
 #include "shader.h"
+
+glm::vec3 Renderer::speed = glm::vec3(0, 0, 0);
+glm::vec2 Renderer::speed_rot = glm::vec2(0, 0);
+
+glm::vec3 Renderer::pos = glm::vec3(0.0f, 0.0f, -15.0f);  // początkowa pozycja
+glm::vec2 Renderer::rot = glm::vec2(0.0f, 0.0f);
 
 Renderer::Renderer(/* args */) {
     glfwSetErrorCallback(callbacks::error_callback);  //Zarejestruj procedurę obsługi błędów
@@ -50,9 +60,11 @@ Renderer::~Renderer() {
 
 void Renderer::initOpenGLProgram() {
     initShaders();
-    //************Tutaj umieszczaj kod, który należy wykonać raz, na początku programu************
+
     glClearColor(0, 0, 0, 1);  //Ustaw kolor czyszczenia bufora kolorów
     glEnable(GL_DEPTH_TEST);   //Włącz test głębokości na pikselach
+
+    glfwSetKeyCallback(window, callbacks::key_callback);  // procedura obsługi klawiatury
 
     this->models.push_back(new ModelTree());
     this->models.push_back(new ModelBench());
@@ -62,9 +74,32 @@ void Renderer::freeOpenGLProgram() {
     freeShaders();
 }
 
+glm::vec3 Renderer::calcDir(float kat_x, float kat_y) {
+    //Author: dr Witold Andrzejewski (GKW Lecture 2021-03-24)
+    glm::vec4 dir = glm::vec4(0, 0, 1, 0);
+    glm::mat4 M = glm::rotate(glm::mat4(1.0f), kat_y, glm::vec3(0, 1, 0));
+    M = glm::rotate(M, kat_x, glm::vec3(1, 0, 0));
+    dir = M * dir;
+    return glm::vec3(dir);
+}
+
 void Renderer::loop() {
+    glm::vec3 dir = glm::vec3(0, 0, 0);
+    glm::vec3 dir_left = glm::vec3(0, 0, 0);
+
     while (!glfwWindowShouldClose(window)) {
-        // obliczaj rzeczy
+        rot.x += Renderer::speed_rot.x * glfwGetTime();  //rotate the camera on x axis (up-down)
+        rot.y += Renderer::speed_rot.y * glfwGetTime();  //rotate on y axis (left-right)
+
+        dir = calcDir(0, rot.y);                //calculate rotated movement vector
+        dir_left = calcDir(0, rot.y + PI / 2);  //=||= but on perpendicular movement
+
+        pos.y += 10 * glfwGetTime() * speed.y;  //move on y axis (up-down), not dependent on camera
+        //move on x,z axis, dependent on camera rotation
+        pos.x += 10 * glfwGetTime() * (speed.z * dir.x + speed.x * dir_left.x);
+        pos.z += 10 * glfwGetTime() * (speed.z * dir.z + speed.x * dir_left.z);
+
+        glfwSetTime(0);
         this->drawScene();
         glfwPollEvents();
     }
@@ -76,10 +111,10 @@ void Renderer::drawScene() {
 
     spColored->use();
 
-    glm::mat4 V = glm::lookAt(glm::vec3(0.0f, 0.0f, -15.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));  //macierz widoku
-    glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);                                              //macierz rzutowania
-    glUniformMatrix4fv(spColored->u("P"), 1, false, glm::value_ptr(P));                                                  //ładowanie macierzy rzutowania
-    glUniformMatrix4fv(spColored->u("V"), 1, false, glm::value_ptr(V));                                                  //ładowanie macierzy widoku
+    glm::mat4 V = glm::lookAt(pos, pos + calcDir(rot.x, rot.y), glm::vec3(0.0f, 1.0f, 0.0f));  //macierz widoku
+    glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);                    //macierz rzutowania
+    glUniformMatrix4fv(spColored->u("P"), 1, false, glm::value_ptr(P));                        //ładowanie macierzy rzutowania
+    glUniformMatrix4fv(spColored->u("V"), 1, false, glm::value_ptr(V));                        //ładowanie macierzy widoku
 
     //rysowanie poszczególnych elementów
     for (int i = 0; i < 2; i++) {

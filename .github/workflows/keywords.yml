@@ -1,0 +1,16 @@
+name: OpenGL banned keywords scan
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  check-format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: check-keywords
+        run: make check-forbidden

@@ -7,7 +7,7 @@ on:
     branches: [master]
 
 jobs:
-  check-format:
+  check-forbidden:
     runs-on: ubuntu-latest
 
     steps:

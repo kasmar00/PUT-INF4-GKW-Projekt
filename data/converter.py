@@ -144,8 +144,8 @@ def exportPoints(file, obj):
 
 
 def export(data, path):
-    # path += ''.join(random.choices(string.ascii_uppercase +
-    #                                string.digits, k=15))
+    path += ''.join(random.choices(string.ascii_uppercase +
+                                   string.digits, k=15))
     try:
         os.mkdir(path)
     except OSError:

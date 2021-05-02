@@ -7,7 +7,7 @@ class ModelTree : public ModelStaticPoint {
    private:
     /*póżniej jakiś typ zmiennej do odwołania do vertices, etc w GPU*/
    public:
-    ModelTree();
+    ModelTree(glm::vec2 pos);
     ~ModelTree(){};
 };
 

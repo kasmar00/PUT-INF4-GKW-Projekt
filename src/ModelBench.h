@@ -7,7 +7,7 @@ class ModelBench : public ModelStaticPoint {
    private:
     /*jakiś typ zmiennej do odwołania do vertices, etc w GPU*/
    public:
-    ModelBench();
+    ModelBench(glm::vec2 pos);
     ~ModelBench(){};
 };
 

@@ -1,5 +1,5 @@
 #include "ModelBench.h"
-ModelBench::ModelBench() {
+ModelBench::ModelBench(glm::vec2 pos) : ModelStaticPoint(pos) {
     // temporary constructor, so we can see something
     // before loading models the proper way
     float myCubeVertices[] = {
@@ -119,7 +119,4 @@ ModelBench::ModelBench() {
         this->colors.push_back(myCubeColors[i]);
     }
     this->vertexCount = 36;
-
-    this->locationX = -2;
-    this->locationY = -1;
 }

@@ -66,8 +66,17 @@ void Renderer::initOpenGLProgram() {
 
     glfwSetKeyCallback(window, callbacks::key_callback);  // procedura obsługi klawiatury
 
-    this->models.push_back(new ModelTree());
-    this->models.push_back(new ModelBench());
+    //some example models
+    ModelBench* a = new ModelBench(glm::vec2(2, 1));
+    a->setDirection(45);
+    this->models.push_back(a);
+    ModelBench* b = new ModelBench(glm::vec2(5, 1));
+    b->setDirection(90);
+    this->models.push_back(b);
+
+    this->models.push_back(new ModelTree(glm::vec2(2, -3)));
+    this->models.push_back(new ModelBench(glm::vec2(-2, -1)));
+    ((ModelBench*)models.back())->setDirection(30);
 }
 
 void Renderer::freeOpenGLProgram() {
@@ -117,8 +126,8 @@ void Renderer::drawScene() {
     glUniformMatrix4fv(spColored->u("V"), 1, false, glm::value_ptr(V));                        //ładowanie macierzy widoku
 
     //rysowanie poszczególnych elementów
-    for (int i = 0; i < 2; i++) {
-        this->models.data()[i]->draw(glm::mat4(1.0f));
+    for (auto i : this->models) {
+        i->draw(glm::mat4(1.0f));
     }
     glfwSwapBuffers(window);  //Skopiuj bufor tylny do bufora przedniego
 }

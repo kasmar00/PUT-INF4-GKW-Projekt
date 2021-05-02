@@ -1,5 +1,5 @@
 #include "ModelTree.h"
-ModelTree::ModelTree() {
+ModelTree::ModelTree(glm::vec2 pos) : ModelStaticPoint(pos) {
     // temporary constructor, so we can see something
     // before loading models the proper way
     float vertsa[] = {
@@ -23,7 +23,4 @@ ModelTree::ModelTree() {
         this->colors.push_back(colorsa[i]);
     }
     this->vertexCount = 6;
-
-    this->locationX = 2;
-    this->locationY = 1;
 }

@@ -6,6 +6,8 @@ CPPFLAGS=-iquote.
 LDLIBS=-lGL -lglfw -lGLEW
 LDFLAGS=
 
+export MESA_GL_VERSION_OVERRIDE=3.3
+
 SRCS := $(wildcard src/*.cpp)
 OBJ := $(SRCS:%.cpp=%.o)
 HEADERS=src/constants.h
@@ -27,7 +29,7 @@ distclean: clean
 	rm -rf libs/lodepng.*
 
 bin/main.out: $(OBJ) $(MY_LIBS) bin/
-	$(CXX) -o $@ $(LDFLAGS) $(OBJ) $(LDLIBS)
+	$(CXX) -o $@ $(LDFLAGS) $(OBJ) $(MY_LIBS) $(LDLIBS)
 
 bin/:
 	mkdir bin/
@@ -69,6 +71,11 @@ check-forbidden:
 			echo "No illegal expressions in files"; \
 		fi;\
 	)
+
+# well, this doesn't work, becouse opengl (by itself) has huge memory leaks
+testmem: bin/main.out
+	valgrind --tool=memcheck --leak-check=full ./bin/main.out 
+
 
 help:
 	@echo "Makefile for C++ && OpenGL Project"

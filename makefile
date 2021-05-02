@@ -63,7 +63,7 @@ check-format:
 
 check-forbidden:
 	@( \
-		if grep -r -E "glBegin|glEnd|glVertex|glNormal|glTexCoord|glRotate|glTranslate|glScale|gluLookat|glFrustum|gluPerspective|glOrtho|glCreateList|glDeleteList|glCallList|glPushMatrix|glPopMatrix|glVertexPointer|glNormalPointer|glTexCoordPointer|glColorPointer|glEnableClientState|glDisableClientState" ./src/; then \
+		if grep -r -E "glBegin\(|glEnd\(|glVertex\(|glNormal\(|glTexCoord\(|glRotate\(|glTranslate\(|glScale\(|gluLookat\(|glFrustum\(|gluPerspective\(|glOrtho\(|glCreateList\(|glDeleteList\(|glCallList\(|glPushMatrix\(|glPopMatrix\(|glVertexPointer\(|glNormalPointer\(|glTexCoordPointer\(|glColorPointer\(|glEnableClientState\(|glDisableClientState" ./src/; then \
 			echo "Source files contain forrbidden expressions!"; \
 			echo "Please remove them from code before committing your changes"; \
 			exit 1; \

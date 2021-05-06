@@ -11,6 +11,9 @@ void callbacks::error_callback(int error, const char* description) {
 void callbacks::key_callback(GLFWwindow* window, int key, int scancode, int action, int mod) {
     if (action == GLFW_PRESS) {
         switch (key) {
+            case GLFW_KEY_ESCAPE:
+                glfwSetWindowShouldClose(window, GL_TRUE);
+                break;
             case GLFW_KEY_W:
                 Renderer::speed.z = 1;  //do przodu
                 break;
@@ -71,4 +74,11 @@ void callbacks::key_callback(GLFWwindow* window, int key, int scancode, int acti
                 break;
         }
     }
+}
+
+void callbacks::window_size(GLFWwindow* window, int width, int height) {
+    if (height == 0)
+        return;
+    Renderer::aspectRatio = (float)width / (float)height;
+    glViewport(0, 0, width, height);
 }

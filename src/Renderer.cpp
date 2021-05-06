@@ -23,6 +23,8 @@ glm::vec2 Renderer::speed_rot = glm::vec2(0, 0);
 glm::vec3 Renderer::pos = glm::vec3(0.0f, 0.0f, -15.0f);  // początkowa pozycja
 glm::vec2 Renderer::rot = glm::vec2(0.0f, 0.0f);
 
+float Renderer::aspectRatio = 1.0f;
+
 Renderer::Renderer(/* args */) {
     glfwSetErrorCallback(callbacks::error_callback);  //Zarejestruj procedurę obsługi błędów
 
@@ -65,6 +67,8 @@ void Renderer::initOpenGLProgram() {
     glEnable(GL_DEPTH_TEST);   //Włącz test głębokości na pikselach
 
     glfwSetKeyCallback(window, callbacks::key_callback);  // procedura obsługi klawiatury
+
+    glfwSetWindowSizeCallback(window, callbacks::window_size);
 
     //some example models
     ModelBench* a = new ModelBench(glm::vec2(2, 1));
@@ -121,7 +125,7 @@ void Renderer::drawScene() {
     spColored->use();
 
     glm::mat4 V = glm::lookAt(pos, pos + calcDir(rot.x, rot.y), glm::vec3(0.0f, 1.0f, 0.0f));  //macierz widoku
-    glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);                    //macierz rzutowania
+    glm::mat4 P = glm::perspective(glm::radians(50.0f), aspectRatio, 1.0f, 50.0f);             //macierz rzutowania
     glUniformMatrix4fv(spColored->u("P"), 1, false, glm::value_ptr(P));                        //ładowanie macierzy rzutowania
     glUniformMatrix4fv(spColored->u("V"), 1, false, glm::value_ptr(V));                        //ładowanie macierzy widoku
 

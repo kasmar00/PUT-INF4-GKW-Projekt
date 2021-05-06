@@ -29,6 +29,7 @@ class Renderer {
     static glm::vec2 speed_rot;  // speed of rotation on xy
     static glm::vec3 pos;        // current position
     static glm::vec2 rot;        // rotation angles
+    static float aspectRatio;    // aspect ratio of window
 };
 
 #endif  // __RENDERER_H__

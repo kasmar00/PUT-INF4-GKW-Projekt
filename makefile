@@ -61,12 +61,24 @@ check-format:
 		fi; \
 	)
 
+check-forbidden:
+	@( \
+		if grep -r -E "glBegin\(|glEnd\(|glVertex\(|glNormal\(|glTexCoord\(|glRotate\(|glTranslate\(|glScale\(|gluLookat\(|glFrustum\(|gluPerspective\(|glOrtho\(|glCreateList\(|glDeleteList\(|glCallList\(|glPushMatrix\(|glPopMatrix\(|glVertexPointer\(|glNormalPointer\(|glTexCoordPointer\(|glColorPointer\(|glEnableClientState\(|glDisableClientState" ./src/; then \
+			echo "Source files contain forrbidden expressions!"; \
+			echo "Please remove them from code before committing your changes"; \
+			exit 1; \
+		else \
+			echo "No illegal expressions in files"; \
+		fi;\
+	)
+
 osm-data:
 	make -C ./data
 
 # well, this doesn't work, becouse opengl (by itself) has huge memory leaks
 testmem: bin/main.out
 	valgrind --tool=memcheck --leak-check=full ./bin/main.out 
+
 
 help:
 	@echo "Makefile for C++ && OpenGL Project"
@@ -82,4 +94,5 @@ help:
 	@echo "  osm-data:      starts the data converter located in /data"
 	@echo "  format:        formats source code"
 	@echo "  check-format:  checks the source code formating"
+	@echo "check-forbidden: checks the source code for forbidden keywords"
 	@echo "  help:          displays this help"

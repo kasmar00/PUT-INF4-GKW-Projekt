@@ -8,6 +8,13 @@ from sys import argv
 import random
 import string
 
+csvsep = "|"
+
+interestingAreaProps = ["building", "landuse",
+                        "height", "building:levels", "area:highway"]
+interestingPointProps = ["highway", "natural",
+                         "amenity", "height", "direction"]
+
 projWSG84 = Proj(proj='utm', zone=33, ellps='WGS84', preserve_units=False)
 
 
@@ -16,7 +23,7 @@ def conToLocal(lat, lon):
 
 
 def loadFile(fileName):
-    with open(f"{fileName}.geojson", "r") as f:
+    with open(f"{fileName}", "r") as f:
         a = f.read()
     b = geojson.loads(a)
     return b
@@ -27,8 +34,9 @@ def prepere(dump):
     objx = []
     objy = []
 
-    lights = {0: [], 1: []}
-    trees = {0: [], 1: []}
+    lights = {0: [], 1: [], "prop": []}
+    trees = {0: [], 1: [], "prop": []}
+    benches = {0: [], 1: [], "prop": []}
 
     all = []
 
@@ -38,9 +46,9 @@ def prepere(dump):
             thisy = []
             thisprop = {}
 
-            for prop in i.properties:
-                if prop in ["building", "landuse", "height", "building:levels"]:
-                    thisprop[prop] = i.properties[prop]
+            for key, val in i.properties.items():
+                if key in interestingAreaProps:
+                    thisprop[key] = val
 
             for coord in i.geometry.coordinates[0]:
                 x, y = conToLocal(*coord)
@@ -55,14 +63,24 @@ def prepere(dump):
             objx.append(x)
             objy.append(y)
 
-            # for prop in i.properties:
-            #     if prop in ["highway", "natural", "height"]:
+            thisprop = {}
+
+            for key, val in i.properties.items():
+                if key in interestingPointProps:
+                    thisprop[key] = val
+
             if i.properties.get("highway") == "street_lamp":
                 lights[0].append(x)
                 lights[1].append(y)
+                lights["prop"].append(thisprop)
             elif i.properties.get("natural") == "tree":
                 trees[0].append(x)
                 trees[1].append(y)
+                trees["prop"].append(thisprop)
+            elif i.properties.get("amenity") == "bench":
+                benches[0].append(x)
+                benches[1].append(y)
+                benches["prop"].append(thisprop)
 
     centerx = (max(objx)+min(objx))/2
     centery = (max(objy)+min(objy))/2
@@ -70,12 +88,15 @@ def prepere(dump):
     trees[1] = [y-centery for y in trees[1]]
     lights[0] = [x-centerx for x in lights[0]]
     lights[1] = [y-centery for y in lights[1]]
+    benches[0] = [x-centerx for x in benches[0]]
+    benches[1] = [y-centery for y in benches[1]]
 
     for i in range(len(all)):
         all[i][0] = [x-centerx for x in all[i][0]]
         all[i][1] = [y-centery for y in all[i][1]]
 
-    ret = {"areas": all, "points": {"trees": trees, "lights": lights}}
+    points = {"trees": trees, "lights": lights, "benches": benches}
+    ret = {"areas": all, "points": points}
     return ret
 
 
@@ -107,47 +128,68 @@ def exportPoints(file, obj):
 
     print("BEGIN")
 
+    print("x|y", *interestingPointProps, sep=csvsep)
     print("COORDS")
     print(len(obj[0]))
     for j in range(len(obj[0])):
-        print(obj[0][j], obj[1][j])
+        print(obj[0][j], obj[1][j], sep=csvsep, end=csvsep)
+        for key in interestingPointProps:
+            print(obj["prop"][j].get(key, " "), end="|")
+        print()
 
     print("END")
     print()
 
     sys.stdout = stdout
-    ...
 
 
 def export(data, path):
-    # path += ''.join(random.choices(string.ascii_uppercase +
-    #                                string.digits, k=15))
+    path += ''.join(random.choices(string.ascii_uppercase +
+                                   string.digits, k=15))
     try:
         os.mkdir(path)
     except OSError:
-        exit()
+        print("Path already exists or can't be created")
+        exit(1)
 
     buildings = open(f"{path}/buildings", "w")
     grass = open(f"{path}/grass", "w")
+    areas = open(f"{path}/areas", "w")
+    dump = open(f"{path}/dump", "w")
+
     for i in data["areas"]:
         if "building" in i[2].keys():
             file = buildings
         elif i[2].get("landuse") == "grass":
             file = grass
+        elif "area:highway" in i[2].keys():
+            file = areas
+        else:
+            file = dump
         exportArea(file, i)
 
     lights = open(f"{path}/lights", "w")
     exportPoints(lights, data["points"]["lights"])
     trees = open(f"{path}/trees", "w")
     exportPoints(trees, data["points"]["trees"])
+    benches = open(f"{path}/benches", "w")
+    exportPoints(benches, data["points"]["benches"])
 
 
 def plot(data):
     for x, y, d in data["areas"]:
         if "building" in d.keys():
             color = "brown"
-        else:
+        elif d.get("landuse") == "grass":
             color = "green"
+        elif d.get("area:highway") == "cycleway":
+            color = "red"
+        elif d.get("area:highway") == "footway":
+            color = "grey"
+        elif "area:highway" in d.keys():
+            color = "black"
+        else:
+            color = "yellow"
         pyplot.fill(x, y, color=color, zorder=1)
     for i in data["points"].keys():
         pyplot.scatter(data["points"][i][0], data["points"][i][1],  zorder=2)
@@ -158,13 +200,14 @@ def plot(data):
 def main(fileName, path, show=True):
     dump = loadFile(fileName)
     data = prepere(dump)
-    export(data, path)
     if show:
         plot(data)
+    else:
+        export(data, path)
 
 
 if __name__ == "__main__":
     fileName = argv[1]
     path = argv[2]
-    show = True if len(argv) > 4 and argv[3] == "y" else False
+    show = True if len(argv) >= 4 and argv[3] == "y" else False
     main(fileName, path, show=show)

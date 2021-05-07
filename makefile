@@ -1,10 +1,12 @@
-.PHONY=all run clean distclean format check-format mostlyclean help
+.PHONY=all run clean distclean format check-format mostlyclean help osm-export
 
 CXX=g++
 CXXFLAGS=-Wall
 CPPFLAGS=-iquote.
 LDLIBS=-lGL -lglfw -lGLEW
 LDFLAGS=
+
+export MESA_GL_VERSION_OVERRIDE=3.3
 
 SRCS := $(wildcard src/*.cpp)
 OBJ := $(SRCS:%.cpp=%.o)
@@ -18,16 +20,16 @@ run: bin/main.out
 	./bin/main.out
 
 mostlyclean:
-	rm -rf bin/ $(OBJ)
+	$(RM) -r bin/ $(OBJ)
 
 clean: mostlyclean
-	rm -rf $(MY_LIBS)
+	$(RM) -r $(MY_LIBS)
 
 distclean: clean
-	rm -rf libs/lodepng.*
+	$(RM) -r libs/lodepng.*
 
 bin/main.out: $(OBJ) $(MY_LIBS) bin/
-	$(CXX) -o $@ $(LDFLAGS) $(OBJ) $(LDLIBS)
+	$(CXX) -o $@ $(LDFLAGS) $(OBJ) $(MY_LIBS) $(LDLIBS)
 
 bin/:
 	mkdir bin/
@@ -59,6 +61,13 @@ check-format:
 		fi; \
 	)
 
+osm-data:
+	make -C ./data
+
+# well, this doesn't work, becouse opengl (by itself) has huge memory leaks
+testmem: bin/main.out
+	valgrind --tool=memcheck --leak-check=full ./bin/main.out 
+
 help:
 	@echo "Makefile for C++ && OpenGL Project"
 	@echo "Computer Graphics and Visualisation - Finall Project"
@@ -70,6 +79,7 @@ help:
 	@echo "  run:           runs the program (using the exectuable bin/main.out)"
 	@echo "  clean:         cleans all intermediate files (.o and .out)"
 	@echo "  mostlyclean:   like clean, but doesn't clean libs/*.o"
+	@echo "  osm-data:      starts the data converter located in /data"
 	@echo "  format:        formats source code"
 	@echo "  check-format:  checks the source code formating"
 	@echo "  help:          displays this help"

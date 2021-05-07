@@ -8,12 +8,13 @@ DataLoader::~DataLoader() {
 
 std::vector<object_data> DataLoader::load_file(std::string filename, int debug) {
     //TODO harden and error file opening (eg file not existing)
-    std::fstream file;
-    file.open(filename, std::ios::in);
-    std::string line;
-    std::vector<object_data> data;
-    object_data* current_object = nullptr;
     using namespace std;
+
+    fstream file;
+    file.open(filename, ios::in);
+    string line;
+    vector<object_data> data;
+    object_data* current_object = nullptr;
     while (getline(file, line)) {
         if (line == "BEGIN") {
             if (debug) cout << "Begin an object" << endl;

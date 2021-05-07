@@ -1,4 +1,4 @@
-.PHONY=all run clean distclean format check-format mostlyclean help
+.PHONY=all run clean distclean format check-format mostlyclean help osm-export
 
 CXX=g++
 CXXFLAGS=-Wall
@@ -20,13 +20,13 @@ run: bin/main.out
 	./bin/main.out
 
 mostlyclean:
-	rm -rf bin/ $(OBJ)
+	$(RM) -r bin/ $(OBJ)
 
 clean: mostlyclean
-	rm -rf $(MY_LIBS)
+	$(RM) -r $(MY_LIBS)
 
 distclean: clean
-	rm -rf libs/lodepng.*
+	$(RM) -r libs/lodepng.*
 
 bin/main.out: $(OBJ) $(MY_LIBS) bin/
 	$(CXX) -o $@ $(LDFLAGS) $(OBJ) $(MY_LIBS) $(LDLIBS)
@@ -72,6 +72,9 @@ check-forbidden:
 		fi;\
 	)
 
+osm-data:
+	make -C ./data
+
 # well, this doesn't work, becouse opengl (by itself) has huge memory leaks
 testmem: bin/main.out
 	valgrind --tool=memcheck --leak-check=full ./bin/main.out 
@@ -88,6 +91,7 @@ help:
 	@echo "  run:           runs the program (using the exectuable bin/main.out)"
 	@echo "  clean:         cleans all intermediate files (.o and .out)"
 	@echo "  mostlyclean:   like clean, but doesn't clean libs/*.o"
+	@echo "  osm-data:      starts the data converter located in /data"
 	@echo "  format:        formats source code"
 	@echo "  check-format:  checks the source code formating"
 	@echo "check-forbidden: checks the source code for forbidden keywords"

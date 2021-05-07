@@ -1,3 +1,5 @@
+# Konwerter danych z OSM
+
 ## Eksport danych:
 
 1. https://overpass-turbo.eu/
@@ -8,6 +10,7 @@
    (
      node["natural"="tree"]({{bbox}});
      node["highway"="street_lamp"]({{bbox}});
+     node["amenity"="bench"]({{bbox}});
      way["building"]({{bbox}});
      relation["building"]({{bbox}});
      way["landuse"="grass"]({{bbox}});
@@ -18,5 +21,24 @@
    >;
    out skel qt;
    ```
-3. Export->geojson
-4. `$ python converter.py export.geojson path`
+3. Select `run` then `export` -> `geojson` and download data
+4. Run the converter:
+   - from makefile: `$ make` (exports from `export.geojson` to `export` dir)
+   - from command line: `$ python3 converter.py export.geojson path`
+
+## Przetwarzane dane
+
+Tabela zawiera spis danych eksportowanych z osm i konwertowanych:
+
+| Typ    | Plik        | Opis                         | Tag                   |
+| ------ | ----------- | ---------------------------- | --------------------- |
+| Obszar | `buildings` | Budynki - obszary i relacje  | `building=*`          |
+| Obszar | `trees`     | trawniki - obszary           | `landuse=grass`       |
+| Obszar | `areas`     | Chodniki i jezdnie - obszary | `area:highway=*`      |
+| Punkt  | `lights`    | Lampy zewnętrzne - punkty    | `highway=street_lamp` |
+| Punkt  | `trees`     | Drzewa - punkty              | `natural=tree`        |
+
+Do dalszego przetwarzania przekazywane są następujące tagi:
+
+- dla obszarów (zmienna w skrypcie `interestingAreaProps`): `building`, `landuse`, `height`, `building:levels`, `area:highway`
+- dla punktów (zmienna w skrypcie `interestingPointProps`): `highway`, `natural`, `amenity`, `height`, `direction`

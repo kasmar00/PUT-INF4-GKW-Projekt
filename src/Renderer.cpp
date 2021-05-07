@@ -12,6 +12,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "ModelBench.h"
+#include "ModelStaticArea.h"
 #include "ModelTree.h"
 #include "callbacks.h"
 #include "constants.h"
@@ -77,6 +78,23 @@ void Renderer::initOpenGLProgram() {
     this->models.push_back(new ModelTree(glm::vec2(2, -3)));
     this->models.push_back(new ModelBench(glm::vec2(-2, -1)));
     ((ModelBench*)models.back())->setDirection(30);
+
+    std::vector<glm::vec2> coords;
+    coords.push_back(glm::vec2(3.0f, 5.0f));
+    coords.push_back(glm::vec2(5.0f, 5.0f));
+    coords.push_back(glm::vec2(5.0f, 3.0f));
+    coords.push_back(glm::vec2(3.0f, 3.0f));
+    coords.push_back(glm::vec2(3.0f, 5.0f));
+    ModelStaticArea* z = new ModelStaticArea(coords, 3.0f);
+    this->models.push_back(z);
+
+    std::vector<glm::vec2> trawaCooords;
+    trawaCooords.push_back(glm::vec2(-3, -2));
+    trawaCooords.push_back(glm::vec2(-7, -2));
+    trawaCooords.push_back(glm::vec2(-7, -5));
+    trawaCooords.push_back(glm::vec2(-3, -5));
+    trawaCooords.push_back(glm::vec2(-3, -2));
+    this->models.push_back(new ModelStaticArea(trawaCooords));
 }
 
 void Renderer::freeOpenGLProgram() {

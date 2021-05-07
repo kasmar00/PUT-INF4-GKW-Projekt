@@ -7,13 +7,15 @@
 #include <vector>
 
 #include "Model.h"
+#include "ModelStatic.h"
 
 class Renderer {
    private:
-    // std::vector<Model> models;
+    std::vector<ModelStatic*> models;
+    glm::vec3 calcDir(float kat_x, float kat_y);  // rotate the move vector
 
    public:
-    GLFWwindow *window;
+    GLFWwindow* window;
     Renderer();
     ~Renderer();
 
@@ -22,6 +24,11 @@ class Renderer {
 
     void loop();
     void drawScene();
+
+    static glm::vec3 speed;      // speed on xyz
+    static glm::vec2 speed_rot;  // speed of rotation on xy
+    static glm::vec3 pos;        // current position
+    static glm::vec2 rot;        // rotation angles
 };
 
 #endif  // __RENDERER_H__

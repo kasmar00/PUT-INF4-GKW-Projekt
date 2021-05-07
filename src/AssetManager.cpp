@@ -8,7 +8,11 @@ AssetManager::~AssetManager() {
 }
 
 void AssetManager::generate_models_from_file(std::string filename) {
-    this->data = this->data_loader.load_file(filename);
+    this->data = this->data_loader.load_planar_file(filename);
+
+    //TODO: add structure to hold point objects
+    std::vector<object_data> temp_data;
+    temp_data = this->data_loader.load_point_file("data/weed/benches");
 
     //This asserts length of every load
     this->sanity_check_load();

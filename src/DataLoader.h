@@ -19,7 +19,8 @@ class DataLoader {
     DataLoader();
     ~DataLoader();
 
-    std::vector<object_data> load_file(std::string filename, int debug = 0);
+    std::vector<object_data> load_planar_file(std::string filename, int debug = 0);
+    std::vector<object_data> load_point_file(std::string filename, int debug = 0);
 };
 
 #endif

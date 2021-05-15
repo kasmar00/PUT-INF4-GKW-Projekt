@@ -1,27 +1,22 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include <cstdlib>
+#include <ctime>
+
 #include "AssetManager.h"
 #include "Renderer.h"
 #include "libs/shaderprogram.h"  //przykład includowania
 
 int main(int argc, char const* argv[]) {
-    //AssetManager test code
-    //DataLoader data;
-    //data.load_file("data/grass/grass");
+    srand(static_cast<unsigned>(time(0)));  //initialize random generator (used in random coloring)
 
     AssetManager manager;
-    manager.generate_models_from_file("data/export/grass");
+    manager.generate_models_from_path("data/export/");
 
-    Renderer* renderer = new Renderer;
+    Renderer renderer(&manager);
 
-    renderer->loop();
-    // sleep(10);
+    renderer.loop();
 
-    delete renderer;
-    // (down)load data
-    // create objects of Model class for all elements from data
-    // create Renderer object
-    // in loop call draw of draw
     return 0;
 }

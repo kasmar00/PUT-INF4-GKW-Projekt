@@ -14,7 +14,7 @@ class ModelStaticArea : public ModelStatic {
     float height;
 
    public:
-    ModelStaticArea(std::vector<glm::vec2> coords, float height = 0);
+    ModelStaticArea(std::vector<glm::vec2> coords, bool walls = false, float height = 0.0f);
     virtual ~ModelStaticArea(){};
 
     void draw(glm::mat4 M);

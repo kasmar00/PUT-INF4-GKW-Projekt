@@ -4,17 +4,18 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
+#include <cstdlib>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "shader.h"
 
-ModelStaticArea::ModelStaticArea(std::vector<glm::vec2> coords, float height) : ModelStatic() {
+ModelStaticArea::ModelStaticArea(std::vector<glm::vec2> coords, bool walls, float height) : ModelStatic() {
     this->coords = coords;
     this->height = height;
 
-    if (height > 0) {  //ściany tylko wtedy gdy jakakoliwek wysokosc
+    if (walls) {  //ściany tylko wtedy gdy maja być
         for (uint i = 0; i < this->coords.size() - 1; i++) {
             glm::vec4 ig, ir, jg, jr;  //i is current, j is next, g-ground, r-roof
             ig = glm::vec4(coords.data()[i].x, 0.0f, coords.data()[i].y, 1);
@@ -30,8 +31,13 @@ ModelStaticArea::ModelStaticArea(std::vector<glm::vec2> coords, float height) : 
             this->drawCoords.push_back(ig);
             this->drawCoords.push_back(jr);
 
-            for (int i = 0; i < 6; i++)
-                this->colors.push_back(glm::vec4(0.4f, 0.6f, 0.3f, 1));
+            for (int i = 0; i < 6; i++) {
+                glm::vec4 color = glm::vec4(1.0f);
+                color.r = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+                color.g = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+                color.b = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+                this->colors.push_back(color);
+            }
         }
     }
 

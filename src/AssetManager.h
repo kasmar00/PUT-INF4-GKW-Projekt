@@ -5,20 +5,26 @@
 
 #include "AssetLoader.h"
 #include "DataLoader.h"
-#include "Model.h"
+#include "ModelStatic.h"
 
 class AssetManager {
    private:
-    std::vector<Model*> models;
-    std::vector<object_data> data;
+    //area data
+    std::vector<object_data> data_buildings;
+    std::vector<object_data> data_grass;
+    //pointy data
+    std::vector<object_data> data_trees;
+    std::vector<object_data> data_benches;
+
     AssetLoader ass_loader;
     DataLoader data_loader;
 
    public:
+    std::vector<ModelStatic*> models;
     AssetManager();
     ~AssetManager();
     void sanity_check_load();
-    void generate_models_from_file(std::string filename);
+    void generate_models_from_path(std::string path);
 };
 
 #endif

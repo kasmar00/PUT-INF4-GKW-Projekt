@@ -6,10 +6,11 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 struct object_data {
-    std::vector<std::pair<std::string, std::string>> props;
+    std::unordered_map<std::string, std::string> props;
     std::vector<glm::vec2> coords;
 };
 

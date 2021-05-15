@@ -24,7 +24,7 @@ glm::vec2 Renderer::speed_rot = glm::vec2(0, 0);
 glm::vec3 Renderer::pos = glm::vec3(0.0f, 0.0f, -15.0f);  // początkowa pozycja
 glm::vec2 Renderer::rot = glm::vec2(0.0f, 0.0f);
 
-Renderer::Renderer(/* args */) {
+Renderer::Renderer(AssetManager* assetManager) {
     glfwSetErrorCallback(callbacks::error_callback);  //Zarejestruj procedurę obsługi błędów
 
     if (!glfwInit()) {  //Zainicjuj bibliotekę GLFW
@@ -49,6 +49,8 @@ Renderer::Renderer(/* args */) {
         exit(EXIT_FAILURE);
     }
 
+    this->assetManager = assetManager;
+
     initOpenGLProgram();  //Operacje inicjujące
 }
 
@@ -66,35 +68,6 @@ void Renderer::initOpenGLProgram() {
     glEnable(GL_DEPTH_TEST);   //Włącz test głębokości na pikselach
 
     glfwSetKeyCallback(window, callbacks::key_callback);  // procedura obsługi klawiatury
-
-    //some example models
-    ModelBench* a = new ModelBench(glm::vec2(2, 1));
-    a->setDirection(45);
-    this->models.push_back(a);
-    ModelBench* b = new ModelBench(glm::vec2(5, 1));
-    b->setDirection(90);
-    this->models.push_back(b);
-
-    this->models.push_back(new ModelTree(glm::vec2(2, -3)));
-    this->models.push_back(new ModelBench(glm::vec2(-2, -1)));
-    ((ModelBench*)models.back())->setDirection(30);
-
-    std::vector<glm::vec2> coords;
-    coords.push_back(glm::vec2(3.0f, 5.0f));
-    coords.push_back(glm::vec2(5.0f, 5.0f));
-    coords.push_back(glm::vec2(5.0f, 3.0f));
-    coords.push_back(glm::vec2(3.0f, 3.0f));
-    coords.push_back(glm::vec2(3.0f, 5.0f));
-    ModelStaticArea* z = new ModelStaticArea(coords, 3.0f);
-    this->models.push_back(z);
-
-    std::vector<glm::vec2> trawaCooords;
-    trawaCooords.push_back(glm::vec2(-3, -2));
-    trawaCooords.push_back(glm::vec2(-7, -2));
-    trawaCooords.push_back(glm::vec2(-7, -5));
-    trawaCooords.push_back(glm::vec2(-3, -5));
-    trawaCooords.push_back(glm::vec2(-3, -2));
-    this->models.push_back(new ModelStaticArea(trawaCooords));
 }
 
 void Renderer::freeOpenGLProgram() {
@@ -126,6 +99,8 @@ void Renderer::loop() {
         pos.x += 10 * glfwGetTime() * (speed.z * dir.x + speed.x * dir_left.x);
         pos.z += 10 * glfwGetTime() * (speed.z * dir.z + speed.x * dir_left.z);
 
+        // printf("%f %f %f\n", pos.x, pos.y, pos.z);
+
         glfwSetTime(0);
         this->drawScene();
         glfwPollEvents();
@@ -139,12 +114,12 @@ void Renderer::drawScene() {
     spColored->use();
 
     glm::mat4 V = glm::lookAt(pos, pos + calcDir(rot.x, rot.y), glm::vec3(0.0f, 1.0f, 0.0f));  //macierz widoku
-    glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);                    //macierz rzutowania
+    glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 500.0f);                   //macierz rzutowania
     glUniformMatrix4fv(spColored->u("P"), 1, false, glm::value_ptr(P));                        //ładowanie macierzy rzutowania
     glUniformMatrix4fv(spColored->u("V"), 1, false, glm::value_ptr(V));                        //ładowanie macierzy widoku
 
     //rysowanie poszczególnych elementów
-    for (auto i : this->models) {
+    for (auto i : this->assetManager->models) {
         i->draw(glm::mat4(1.0f));
     }
     glfwSwapBuffers(window);  //Skopiuj bufor tylny do bufora przedniego

@@ -29,7 +29,7 @@ std::vector<object_data> DataLoader::load_planar_file(std::string filename, int 
                 ss << line;
                 string a, b;
                 ss >> a >> b;
-                current_object->props.push_back(pair<string, string>(a, b));
+                current_object->props[a] = b;
                 if (debug) cout << a << '\t' << b << endl;
             }
         } else if (line == "COORDS") {
@@ -42,7 +42,7 @@ std::vector<object_data> DataLoader::load_planar_file(std::string filename, int 
                 ss << line;
                 double a, b;
                 ss >> a >> b;
-                current_object->coords.push_back(glm::vec2(a, b));
+                current_object->coords.push_back(glm::vec2(a, -b));  //b jest zanegowane, bo współrzędne są odwrócone
                 if (debug) cout << a << '\t' << b << endl;
             }
         } else if (line == "END") {
@@ -98,14 +98,14 @@ std::vector<object_data> DataLoader::load_point_file(std::string filename, int d
                         glm::vec2 vec;
                         vec.x = stod(prop);
                         getline(ss, prop, '|');
-                        vec.y = stod(prop);
+                        vec.y = -stod(prop);  //zanegowane, bo współrzędne są odwrócone
                         count += 1;
                         current_object->coords.push_back(vec);
 
                     } else {
                         if (prop != " ") {
                             if (debug) cout << "Prop: " << prop_template[count - 1] << " " << prop << endl;
-                            current_object->props.push_back(pair<string, string>(prop_template[count - 1], prop));
+                            current_object->props[prop_template[count - 1]] = prop;
                         }
                     }
                 }

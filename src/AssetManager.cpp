@@ -19,7 +19,7 @@ void AssetManager::generate_models_from_path(std::string path) {
         bool walls = true;
         if (i.props.contains("building:levels"))
             height = std::stoi(i.props["building:levels"]) * 4;
-        if (i.props["building"] == "roof")
+        if (i.props["building"] == "roof" || i.props["building:part"] == "roof")
             walls = false;
 
         this->models.push_back(new ModelStaticArea(i.coords, walls, height));

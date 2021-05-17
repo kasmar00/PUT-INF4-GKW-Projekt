@@ -23,7 +23,7 @@ glm::vec2 Renderer::speed_rot = glm::vec2(0, 0);
 glm::vec3 Renderer::pos = glm::vec3(0.0f, 0.0f, -15.0f);  // początkowa pozycja
 glm::vec2 Renderer::rot = glm::vec2(0.0f, 0.0f);
 
-float Renderer::aspectRatio = 1.0f;
+float Renderer::aspectRatio = 1.0f, Renderer::wWidth = 1.0f, Renderer::wHeight = 1.0f;
 
 Renderer::Renderer(/* args */) {
     glfwSetErrorCallback(callbacks::error_callback);  //Zarejestruj procedurę obsługi błędów
@@ -56,6 +56,7 @@ Renderer::Renderer(/* args */) {
 Renderer::~Renderer() {
     freeOpenGLProgram();
 
+    glfwDestroyCursor(cursor);
     glfwDestroyWindow(window);  //Usuń kontekst OpenGL i okno
     glfwTerminate();            //Zwolnij zasoby zajęte przez GLFW
 }
@@ -66,7 +67,10 @@ void Renderer::initOpenGLProgram() {
     glClearColor(0, 0, 0, 1);  //Ustaw kolor czyszczenia bufora kolorów
     glEnable(GL_DEPTH_TEST);   //Włącz test głębokości na pikselach
 
-    glfwSetKeyCallback(window, callbacks::key_callback);  // procedura obsługi klawiatury
+    glfwSetKeyCallback(window, callbacks::key_callback);          // procedura obsługi klawiatury
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  //procedura obsługi myszy
+    glfwSetCursorPosCallback(window, callbacks::cursor_position_callback);
+    glfwSetMouseButtonCallback(window, callbacks::mouse_button_callback);
 
     glfwSetWindowSizeCallback(window, callbacks::window_size);
 
@@ -99,7 +103,6 @@ glm::vec3 Renderer::calcDir(float kat_x, float kat_y) {
 void Renderer::loop() {
     glm::vec3 dir = glm::vec3(0, 0, 0);
     glm::vec3 dir_left = glm::vec3(0, 0, 0);
-
     while (!glfwWindowShouldClose(window)) {
         rot.x += Renderer::speed_rot.x * glfwGetTime();  //rotate the camera on x axis (up-down)
         rot.y += Renderer::speed_rot.y * glfwGetTime();  //rotate on y axis (left-right)

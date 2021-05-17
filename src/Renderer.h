@@ -16,7 +16,6 @@ class Renderer {
 
    public:
     GLFWwindow* window;
-    GLFWcursor* cursor;
     Renderer();
     ~Renderer();
 

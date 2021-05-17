@@ -16,7 +16,6 @@ void callbacks::key_callback(GLFWwindow* window, int key, int scancode, int acti
     if (action == GLFW_PRESS) {
         switch (key) {
             case GLFW_KEY_ESCAPE:
-                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
                 if (callbacks::last_key == GLFW_KEY_ESCAPE)
                     glfwSetWindowShouldClose(window, GL_TRUE);
                 break;

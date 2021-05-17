@@ -11,17 +11,23 @@
 
 #include "shader.h"
 
-ModelStaticArea::ModelStaticArea(std::vector<glm::vec2> coords, bool walls, float height) : ModelStatic() {
+ModelStaticArea::ModelStaticArea(std::vector<glm::vec2> coords) : ModelStatic() {
     this->coords = coords;
-    this->height = height;
+    this->color = glm::vec4(glm::vec4(0.4f, 0.6f, 0.3f, 1));
 
+    this->walls = false;
+    this->minHeight = 0.0f;
+    this->maxHeight = 0.0f;
+}
+
+void ModelStaticArea::createCoords() {
     if (walls) {  //ściany tylko wtedy gdy maja być
         for (uint i = 0; i < this->coords.size() - 1; i++) {
             glm::vec4 ig, ir, jg, jr;  //i is current, j is next, g-ground, r-roof
-            ig = glm::vec4(coords.data()[i].x, 0.0f, coords.data()[i].y, 1);
-            jg = glm::vec4(coords.data()[i + 1].x, 0.0f, coords.data()[i + 1].y, 1);
-            ir = glm::vec4(coords.data()[i].x, height, coords.data()[i].y, 1);
-            jr = glm::vec4(coords.data()[i + 1].x, height, coords.data()[i + 1].y, 1);
+            ig = glm::vec4(coords.data()[i].x, minHeight, coords.data()[i].y, 1);
+            jg = glm::vec4(coords.data()[i + 1].x, minHeight, coords.data()[i + 1].y, 1);
+            ir = glm::vec4(coords.data()[i].x, maxHeight, coords.data()[i].y, 1);
+            jr = glm::vec4(coords.data()[i + 1].x, maxHeight, coords.data()[i + 1].y, 1);
 
             this->drawCoords.push_back(ig);  //jeden trójkąt
             this->drawCoords.push_back(ir);
@@ -44,19 +50,34 @@ ModelStaticArea::ModelStaticArea(std::vector<glm::vec2> coords, bool walls, floa
     //sufit
     //docelowo poprawne dzielenie na trójkąty (również przy kątach>180deg)
     //tymczasowo-wachlarz (recznie)
-    glm::vec4 start = glm::vec4(coords.data()[0].x, height, coords.data()[0].y, 1);
+    glm::vec4 start = glm::vec4(coords.data()[0].x, maxHeight, coords.data()[0].y, 1);
     for (uint i = 1; i < this->coords.size() - 1; i++) {
         glm::vec4 a, b;
-        a = glm::vec4(coords.data()[i].x, height, coords.data()[i].y, 1);
-        b = glm::vec4(coords.data()[i + 1].x, height, coords.data()[i + 1].y, 1);
+        a = glm::vec4(coords.data()[i].x, maxHeight, coords.data()[i].y, 1);
+        b = glm::vec4(coords.data()[i + 1].x, maxHeight, coords.data()[i + 1].y, 1);
 
         this->drawCoords.push_back(start);
         this->drawCoords.push_back(a);
         this->drawCoords.push_back(b);
 
         for (int i = 0; i < 3; i++)
-            this->colors.push_back(glm::vec4(0.4f, 0.6f, 0.3f, 1));
+            this->colors.push_back(this->color);
     }
+
+    //TODO: podłoga???
+}
+
+void ModelStaticArea::addHeight(float min, float max) {
+    this->maxHeight = max;
+    this->minHeight = min;
+}
+
+void ModelStaticArea::addWalls() {
+    this->walls = true;
+}
+
+void ModelStaticArea::addColor(glm::vec4 col) {
+    this->color = col;
 }
 
 void ModelStaticArea::draw(glm::mat4 M) {

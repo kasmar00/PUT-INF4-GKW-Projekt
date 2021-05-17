@@ -50,5 +50,5 @@ Tabela zawiera spis danych eksportowanych z osm i konwertowanych:
 
 Do dalszego przetwarzania przekazywane są następujące tagi:
 
-- dla obszarów (zmienna w skrypcie `interestingAreaProps`): `building`, `landuse`, `height`, `building:levels`, `area:highway`, `building:part`
+- dla obszarów (zmienna w skrypcie `interestingAreaProps`): `building`, `landuse`, `height`, `building:levels`, `area:highway`, `building:part`, `building:min_level`
 - dla punktów (zmienna w skrypcie `interestingPointProps`): `highway`, `natural`, `amenity`, `height`, `direction`

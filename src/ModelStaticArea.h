@@ -11,11 +11,19 @@ class ModelStaticArea : public ModelStatic {
     std::vector<glm::vec4> drawCoords;
     std::vector<glm::vec4> colors;
 
-    float height;
+    float maxHeight;
+    float minHeight;
+    bool walls;
+    glm::vec4 color;
 
    public:
-    ModelStaticArea(std::vector<glm::vec2> coords, bool walls = false, float height = 0.0f);
+    ModelStaticArea(std::vector<glm::vec2> coords);
     virtual ~ModelStaticArea(){};
+
+    void createCoords();
+    void addHeight(float minHeight, float maxheight);
+    void addWalls();
+    void addColor(glm::vec4 col);
 
     void draw(glm::mat4 M);
 };

@@ -11,7 +11,7 @@ import string
 csvsep = "|"
 
 interestingAreaProps = ["building", "landuse",
-                        "height", "building:levels", "area:highway", "building:part"]
+                        "height", "building:levels", "area:highway", "building:part", "building:min_level"]
 interestingPointProps = ["highway", "natural",
                          "amenity", "height", "direction"]
 

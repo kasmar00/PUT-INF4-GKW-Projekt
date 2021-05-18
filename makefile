@@ -19,6 +19,9 @@ all: bin/main.out
 run: bin/main.out
 	./bin/main.out
 
+mouse: export GLFWMOUSE=345
+mouse: run
+
 mostlyclean:
 	$(RM) -r bin/ $(OBJ)
 

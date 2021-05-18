@@ -70,9 +70,13 @@ void Renderer::initOpenGLProgram() {
 
     glfwSetKeyCallback(window, callbacks::key_callback);  // procedura obsługi klawiatury
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  //procedura obsługi myszy
-    glfwSetCursorPosCallback(window, callbacks::cursor_position_callback);
-    glfwSetMouseButtonCallback(window, callbacks::mouse_button_callback);
+    if (getenv("GLFWMOUSE") != NULL) {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  //procedura obsługi myszy
+        glfwSetCursorPosCallback(window, callbacks::cursor_position_callback);
+        glfwSetMouseButtonCallback(window, callbacks::mouse_button_callback);
+    }
+
+    // glfwSetWindowFocusCallback(window, callbacks::focus_callback);
 
     glfwSetWindowSizeCallback(window, callbacks::window_size);
 

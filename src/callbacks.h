@@ -9,6 +9,7 @@ class callbacks {
     static int last_key;
     static float mouseSpeed;
     static bool mouseActive;
+    static bool windowFocus;
 
    public:
     static void error_callback(int error, const char* description);
@@ -16,6 +17,7 @@ class callbacks {
     static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
     static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
     static void window_size(GLFWwindow* window, int width, int height);
+    static void focus_callback(GLFWwindow* window, int focused);
 };
 
 #endif  // __CALLBACKS_H__

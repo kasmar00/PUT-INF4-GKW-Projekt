@@ -7,6 +7,7 @@
 int callbacks::last_key = GLFW_KEY_UNKNOWN;
 float callbacks::mouseSpeed = 0.010f;
 bool callbacks::mouseActive = false;
+bool callbacks::windowFocus = true;
 
 void callbacks::error_callback(int error, const char* description) {
     fputs(description, stderr);
@@ -15,12 +16,16 @@ void callbacks::error_callback(int error, const char* description) {
 void callbacks::key_callback(GLFWwindow* window, int key, int scancode, int action, int mod) {
     if (action == GLFW_PRESS) {
         switch (key) {
+            case GLFW_KEY_Q:
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);  // wypuszczenie myszki
+                break;
             case GLFW_KEY_ESCAPE:
-                if (callbacks::last_key == GLFW_KEY_ESCAPE)
-                    glfwSetWindowShouldClose(window, GL_TRUE);
+                glfwSetWindowShouldClose(window, GL_TRUE);
                 break;
             case GLFW_KEY_W:
                 Renderer::speed.z = 1;  //do przodu
+                if (callbacks::last_key == GLFW_KEY_W)
+                    Renderer::speed.z = 5;  //do przodu szybko
                 break;
             case GLFW_KEY_S:
                 Renderer::speed.z = -1;  //do tyłu
@@ -101,6 +106,8 @@ void callbacks::mouse_button_callback(GLFWwindow* window, int button, int action
             Renderer::speed_rot.y = 0;
             Renderer::speed_rot.x = 0;
         }
+    } else if (button == GLFW_MOUSE_BUTTON_LEFT) {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 }
 
@@ -112,3 +119,14 @@ void callbacks::window_size(GLFWwindow* window, int width, int height) {
     Renderer::wHeight = (float)height;
     glViewport(0, 0, width, height);
 }
+
+// void callbacks::focus_callback(GLFWwindow* window, int focused) {
+//     callbacks::windowFocus ^= true;
+//     if (callbacks::windowFocus) {
+//         printf("aaaa\n");
+//         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+//     } else {
+//         printf("bbbb\n");
+//         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+//     }
+// }

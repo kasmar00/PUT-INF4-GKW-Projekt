@@ -11,7 +11,7 @@ int main(int argc, char const* argv[]) {
     //data.load_file("data/grass/grass");
 
     AssetManager manager;
-    manager.generate_models_from_file("data/weed/grass");
+    manager.generate_models_from_file("data/export/grass");
 
     Renderer* renderer = new Renderer;
 

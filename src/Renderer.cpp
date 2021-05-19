@@ -127,8 +127,7 @@ void Renderer::drawScene() {
     spColored->use();
 
     glm::mat4 V = glm::lookAt(pos, pos + calcDir(rot.x, rot.y), glm::vec3(0.0f, 1.0f, 0.0f));  //macierz widoku
-    glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 500.0f);                   //macierz rzutowania
-    glm::mat4 P = glm::perspective(glm::radians(50.0f), aspectRatio, 1.0f, 50.0f);             //macierz rzutowania
+    glm::mat4 P = glm::perspective(glm::radians(50.0f), aspectRatio, 1.0f, 500.0f);            //macierz rzutowania
     glUniformMatrix4fv(spColored->u("P"), 1, false, glm::value_ptr(P));                        //ładowanie macierzy rzutowania
     glUniformMatrix4fv(spColored->u("V"), 1, false, glm::value_ptr(V));                        //ładowanie macierzy widoku
 

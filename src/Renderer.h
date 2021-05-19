@@ -6,17 +6,18 @@
 
 #include <vector>
 
+#include "AssetManager.h"
 #include "Model.h"
 #include "ModelStatic.h"
 
 class Renderer {
    private:
-    std::vector<ModelStatic*> models;
     glm::vec3 calcDir(float kat_x, float kat_y);  // rotate the move vector
+    AssetManager* assetManager;
 
    public:
     GLFWwindow* window;
-    Renderer();
+    Renderer(AssetManager* assetManager);
     ~Renderer();
 
     void initOpenGLProgram();

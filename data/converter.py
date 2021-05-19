@@ -11,7 +11,7 @@ import string
 csvsep = "|"
 
 interestingAreaProps = ["building", "landuse",
-                        "height", "building:levels", "area:highway"]
+                        "height", "building:levels", "area:highway", "building:part", "building:min_level"]
 interestingPointProps = ["highway", "natural",
                          "amenity", "height", "direction"]
 
@@ -158,7 +158,7 @@ def export(data, path):
     dump = open(f"{path}/dump", "w")
 
     for i in data["areas"]:
-        if "building" in i[2].keys():
+        if "building" in i[2].keys() or "building:part" in i[2].keys():
             file = buildings
         elif i[2].get("landuse") == "grass":
             file = grass

@@ -12,6 +12,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "ModelBench.h"
+#include "ModelStaticArea.h"
 #include "ModelTree.h"
 #include "callbacks.h"
 #include "constants.h"
@@ -27,7 +28,7 @@ float Renderer::aspectRatio = 1.0f;
 float Renderer::wWidth = 1.0f;
 float Renderer::wHeight = 1.0f;
 
-Renderer::Renderer(/* args */) {
+Renderer::Renderer(AssetManager* assetManager) {
     glfwSetErrorCallback(callbacks::error_callback);  //Zarejestruj procedurę obsługi błędów
 
     if (!glfwInit()) {  //Zainicjuj bibliotekę GLFW
@@ -51,6 +52,8 @@ Renderer::Renderer(/* args */) {
         fprintf(stderr, "Nie można zainicjować GLEW.\n");
         exit(EXIT_FAILURE);
     }
+
+    this->assetManager = assetManager;
 
     initOpenGLProgram();  //Operacje inicjujące
 }
@@ -79,18 +82,6 @@ void Renderer::initOpenGLProgram() {
     // glfwSetWindowFocusCallback(window, callbacks::focus_callback);
 
     glfwSetWindowSizeCallback(window, callbacks::window_size);
-
-    //some example models
-    ModelBench* a = new ModelBench(glm::vec2(2, 1));
-    a->setDirection(45);
-    this->models.push_back(a);
-    ModelBench* b = new ModelBench(glm::vec2(5, 1));
-    b->setDirection(90);
-    this->models.push_back(b);
-
-    this->models.push_back(new ModelTree(glm::vec2(2, -3)));
-    this->models.push_back(new ModelBench(glm::vec2(-2, -1)));
-    ((ModelBench*)models.back())->setDirection(30);
 }
 
 void Renderer::freeOpenGLProgram() {
@@ -121,6 +112,8 @@ void Renderer::loop() {
         pos.x += 10 * glfwGetTime() * (speed.z * dir.x + speed.x * dir_left.x);
         pos.z += 10 * glfwGetTime() * (speed.z * dir.z + speed.x * dir_left.z);
 
+        // printf("%f %f %f\n", pos.x, pos.y, pos.z);
+
         glfwSetTime(0);
         this->drawScene();
         glfwPollEvents();
@@ -134,12 +127,12 @@ void Renderer::drawScene() {
     spColored->use();
 
     glm::mat4 V = glm::lookAt(pos, pos + calcDir(rot.x, rot.y), glm::vec3(0.0f, 1.0f, 0.0f));  //macierz widoku
-    glm::mat4 P = glm::perspective(glm::radians(50.0f), aspectRatio, 1.0f, 50.0f);             //macierz rzutowania
+    glm::mat4 P = glm::perspective(glm::radians(50.0f), aspectRatio, 1.0f, 500.0f);            //macierz rzutowania
     glUniformMatrix4fv(spColored->u("P"), 1, false, glm::value_ptr(P));                        //ładowanie macierzy rzutowania
     glUniformMatrix4fv(spColored->u("V"), 1, false, glm::value_ptr(V));                        //ładowanie macierzy widoku
 
     //rysowanie poszczególnych elementów
-    for (auto i : this->models) {
+    for (auto i : this->assetManager->models) {
         i->draw(glm::mat4(1.0f));
     }
     glfwSwapBuffers(window);  //Skopiuj bufor tylny do bufora przedniego

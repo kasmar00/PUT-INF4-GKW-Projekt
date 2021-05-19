@@ -2,17 +2,26 @@
 
 ## Eksport danych:
 
-1. https://overpass-turbo.eu/
-2. Query:
+1. Go to: https://overpass-turbo.eu/
+2. Paste the Query:
+   (or go directly to it: https://overpass-turbo.eu/s/17pb)
+
    ```
    {{bbox=52.39899, 16.946, 52.40796, 16.95495}}
    [out:json][timeout:25];
    (
+     relation["type"="building"]({{bbox}});
+     >>;
+   )->.all_build;
+   (
+     wr["building"]({{bbox}});
+   )->.buildings;
+   (
+     (.buildings; - .all_build;);
+     wr["building:part"]({{bbox}});
      node["natural"="tree"]({{bbox}});
      node["highway"="street_lamp"]({{bbox}});
      node["amenity"="bench"]({{bbox}});
-     way["building"]({{bbox}});
-     relation["building"]({{bbox}});
      way["landuse"="grass"]({{bbox}});
      way["area:highway"]({{bbox}});
      relation["area:highway"]({{bbox}});
@@ -21,6 +30,7 @@
    >;
    out skel qt;
    ```
+
 3. Select `run` then `export` -> `geojson` and download data
 4. Run the converter:
    - from makefile: `$ make` (exports from `export.geojson` to `export` dir)
@@ -33,12 +43,12 @@ Tabela zawiera spis danych eksportowanych z osm i konwertowanych:
 | Typ    | Plik        | Opis                         | Tag                   |
 | ------ | ----------- | ---------------------------- | --------------------- |
 | Obszar | `buildings` | Budynki - obszary i relacje  | `building=*`          |
-| Obszar | `trees`     | trawniki - obszary           | `landuse=grass`       |
+| Obszar | `grass`     | trawniki - obszary           | `landuse=grass`       |
 | Obszar | `areas`     | Chodniki i jezdnie - obszary | `area:highway=*`      |
 | Punkt  | `lights`    | Lampy zewnętrzne - punkty    | `highway=street_lamp` |
 | Punkt  | `trees`     | Drzewa - punkty              | `natural=tree`        |
 
 Do dalszego przetwarzania przekazywane są następujące tagi:
 
-- dla obszarów (zmienna w skrypcie `interestingAreaProps`): `building`, `landuse`, `height`, `building:levels`, `area:highway`
+- dla obszarów (zmienna w skrypcie `interestingAreaProps`): `building`, `landuse`, `height`, `building:levels`, `area:highway`, `building:part`, `building:min_level`
 - dla punktów (zmienna w skrypcie `interestingPointProps`): `highway`, `natural`, `amenity`, `height`, `direction`

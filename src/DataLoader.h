@@ -6,10 +6,11 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 struct object_data {
-    std::vector<std::pair<std::string, std::string>> props;
+    std::unordered_map<std::string, std::string> props;
     std::vector<glm::vec2> coords;
 };
 
@@ -19,7 +20,8 @@ class DataLoader {
     DataLoader();
     ~DataLoader();
 
-    std::vector<object_data> load_file(std::string filename, int debug = 0);
+    std::vector<object_data> load_planar_file(std::string filename, int debug = 0);
+    std::vector<object_data> load_point_file(std::string filename, int debug = 0);
 };
 
 #endif

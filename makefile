@@ -1,7 +1,7 @@
 .PHONY=all run clean distclean format check-format mostlyclean help osm-export
 
 CXX=g++
-CXXFLAGS=-Wall
+CXXFLAGS=-Wall -std=c++2a
 CPPFLAGS=-iquote.
 LDLIBS=-lGL -lglfw -lGLEW
 LDFLAGS=

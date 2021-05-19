@@ -24,6 +24,10 @@ glm::vec2 Renderer::speed_rot = glm::vec2(0, 0);
 glm::vec3 Renderer::pos = glm::vec3(0.0f, 0.0f, -15.0f);  // początkowa pozycja
 glm::vec2 Renderer::rot = glm::vec2(0.0f, 0.0f);
 
+float Renderer::aspectRatio = 1.0f;
+float Renderer::wWidth = 1.0f;
+float Renderer::wHeight = 1.0f;
+
 Renderer::Renderer(AssetManager* assetManager) {
     glfwSetErrorCallback(callbacks::error_callback);  //Zarejestruj procedurę obsługi błędów
 
@@ -68,6 +72,16 @@ void Renderer::initOpenGLProgram() {
     glEnable(GL_DEPTH_TEST);   //Włącz test głębokości na pikselach
 
     glfwSetKeyCallback(window, callbacks::key_callback);  // procedura obsługi klawiatury
+
+    if (getenv("GLFWMOUSE") != NULL) {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  //procedura obsługi myszy
+        glfwSetCursorPosCallback(window, callbacks::cursor_position_callback);
+        glfwSetMouseButtonCallback(window, callbacks::mouse_button_callback);
+    }
+
+    // glfwSetWindowFocusCallback(window, callbacks::focus_callback);
+
+    glfwSetWindowSizeCallback(window, callbacks::window_size);
 }
 
 void Renderer::freeOpenGLProgram() {
@@ -86,7 +100,6 @@ glm::vec3 Renderer::calcDir(float kat_x, float kat_y) {
 void Renderer::loop() {
     glm::vec3 dir = glm::vec3(0, 0, 0);
     glm::vec3 dir_left = glm::vec3(0, 0, 0);
-
     while (!glfwWindowShouldClose(window)) {
         rot.x += Renderer::speed_rot.x * glfwGetTime();  //rotate the camera on x axis (up-down)
         rot.y += Renderer::speed_rot.y * glfwGetTime();  //rotate on y axis (left-right)
@@ -115,6 +128,7 @@ void Renderer::drawScene() {
 
     glm::mat4 V = glm::lookAt(pos, pos + calcDir(rot.x, rot.y), glm::vec3(0.0f, 1.0f, 0.0f));  //macierz widoku
     glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 500.0f);                   //macierz rzutowania
+    glm::mat4 P = glm::perspective(glm::radians(50.0f), aspectRatio, 1.0f, 50.0f);             //macierz rzutowania
     glUniformMatrix4fv(spColored->u("P"), 1, false, glm::value_ptr(P));                        //ładowanie macierzy rzutowania
     glUniformMatrix4fv(spColored->u("V"), 1, false, glm::value_ptr(V));                        //ładowanie macierzy widoku
 

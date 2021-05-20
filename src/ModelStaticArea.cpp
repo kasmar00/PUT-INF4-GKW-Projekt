@@ -1,15 +1,27 @@
 #include "ModelStaticArea.h"
 
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Partition_traits_2.h>
+#include <CGAL/partition_2.h>
+#include <CGAL/property_map.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
+#include <cassert>
 #include <cstdlib>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <list>
 
 #include "shader.h"
+
+typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+typedef CGAL::Partition_traits_2<K, CGAL::Pointer_property_map<K::Point_2>::type> Partition_traits_2;
+typedef Partition_traits_2::Point_2 Point_2;
+typedef Partition_traits_2::Polygon_2 Polygon_2;  // a polygon of indices
+typedef std::list<Polygon_2> Polygon_list;
 
 ModelStaticArea::ModelStaticArea(std::vector<glm::vec2> coords) : ModelStatic() {
     this->coords = coords;
@@ -48,13 +60,33 @@ void ModelStaticArea::createCoords() {
     }
 
     //sufit
-    //docelowo poprawne dzielenie na trójkąty (również przy kątach>180deg)
-    //tymczasowo-wachlarz (recznie)
-    glm::vec4 start = glm::vec4(coords.data()[0].x, maxHeight, coords.data()[0].y, 1);
-    for (uint i = 1; i < this->coords.size() - 1; i++) {
+    try {
+        auto a = this->divideIntoConvex(coords, 1);
+        for (auto i : a)
+            this->createCoordsPlanar(i);
+    } catch (const std::exception& e) {
+        //if error try in reverse direction
+        try {
+            auto a = this->divideIntoConvex(coords, 0);
+            for (auto i : a)
+                this->createCoordsPlanar(i);
+        } catch (const std::exception& e) {
+            std::cerr << e.what() << '\n';
+            std::cerr << this->coords.data()[0].x << " " << this->coords.data()[0].y << std::endl
+                      << std::endl;
+        }
+    }
+
+    //TODO: podłoga???
+}
+
+void ModelStaticArea::createCoordsPlanar(std::vector<glm::vec2> data) {
+    // function to create coords for drawing convex polygons (manually dividing into fan)
+    glm::vec4 start = glm::vec4(data.data()[0].x, maxHeight, data.data()[0].y, 1);
+    for (uint i = 1; i < data.size() - 1; i++) {
         glm::vec4 a, b;
-        a = glm::vec4(coords.data()[i].x, maxHeight, coords.data()[i].y, 1);
-        b = glm::vec4(coords.data()[i + 1].x, maxHeight, coords.data()[i + 1].y, 1);
+        a = glm::vec4(data.data()[i].x, maxHeight, data.data()[i].y, 1);
+        b = glm::vec4(data.data()[i + 1].x, maxHeight, data.data()[i + 1].y, 1);
 
         this->drawCoords.push_back(start);
         this->drawCoords.push_back(a);
@@ -63,8 +95,36 @@ void ModelStaticArea::createCoords() {
         for (int i = 0; i < 3; i++)
             this->colors.push_back(this->color);
     }
+}
 
-    //TODO: podłoga???
+std::vector<std::vector<glm::vec2>> ModelStaticArea::divideIntoConvex(std::vector<glm::vec2> coords, bool dir) {
+    // function to divide concave polygons into convex (no angles greater than 180 deg)
+    std::vector<K::Point_2> points;
+    for (auto i : coords) {
+        points.push_back(K::Point_2(i.x, i.y));
+    }
+    Partition_traits_2 traits(CGAL::make_property_map(points));
+    Polygon_2 polygon;
+    if (dir == 1)
+        for (uint i = 0; i < points.size() - 1; i++)
+            polygon.push_back(i);
+    else
+        for (int i = points.size() - 1; i > 0; i--)
+            polygon.push_back(i);
+    Polygon_list partition_polys;
+    CGAL::approx_convex_partition_2(polygon.vertices_begin(),
+                                    polygon.vertices_end(),
+                                    std::back_inserter(partition_polys),
+                                    traits);
+    std::vector<std::vector<glm::vec2>> ret;
+    for (const Polygon_2& poly : partition_polys) {
+        std::vector<glm::vec2> tmp;
+        for (Point_2 p : poly.container()) {
+            tmp.push_back(glm::vec2(points[p].x(), points[p].y()));
+        }
+        ret.push_back(tmp);
+    }
+    return ret;
 }
 
 void ModelStaticArea::addHeight(float min, float max) {

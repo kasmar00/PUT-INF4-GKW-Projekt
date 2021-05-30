@@ -3,21 +3,26 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-ModelTree::ModelTree(glm::vec2 pos) : ModelStaticPoint(pos) {
+
+ModelTree::ModelTree(glm::vec2 pos, std::vector<float> *verts, std::vector<float> *colors)
+    : ModelStaticPoint(pos, verts, colors) {
     // temporary constructor, so we can see something
     // before loading models the proper way
+    /*
+    //ten kod został przeniesiony do klasy AssetLoader
     using namespace std;
 
-    struct vert {
-        float x;
-        float y;
-        float z;
-    };
+    // struct vert {
+    //     float x;
+    //     float y;
+    //     float z;
+    // };
+    // glm::vec3 vert;
 
     fstream file;
-    file.open("data/weed/suzanne_tri.obj", ios::in);
+    file.open("polygon/assimp/tree.obj", ios::in);
     string a;
-    vector<vert> vertexes;
+    vector<glm::vec3> vertexes;
     int v_cnt = 0, f_cnt = 0;
     vector<float> final_table;
     while (getline(file, a)) {
@@ -25,7 +30,7 @@ ModelTree::ModelTree(glm::vec2 pos) : ModelStaticPoint(pos) {
         stringstream segment;
         string value;
         int index;
-        vert v;
+        glm::vec3 v;
 
         switch (a[0] ^ a[1]) {
             case 86:
@@ -90,4 +95,5 @@ ModelTree::ModelTree(glm::vec2 pos) : ModelStaticPoint(pos) {
         this->colors.push_back(colorsa[i]);
     }
     this->vertexCount = f_cnt * 3;
+    */
 }

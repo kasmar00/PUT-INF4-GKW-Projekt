@@ -115,8 +115,8 @@ ModelBench::ModelBench(glm::vec2 pos) : ModelStaticPoint(pos) {
         1.0f, 1.0f, 1.0f, 1.0f};
 
     for (int i = 0; i < 144; i++) {
-        this->verts.push_back(myCubeVertices[i]);
-        this->colors.push_back(myCubeColors[i]);
+        this->verts->push_back(myCubeVertices[i]);
+        this->colors->push_back(myCubeColors[i]);
     }
     this->vertexCount = 36;
 }

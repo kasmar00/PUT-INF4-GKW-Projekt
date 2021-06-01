@@ -9,6 +9,7 @@ Docelowy system: Linux (Ubuntu)
    - `glm` (apt: `libglm-dev`)
    - `glfw` (apt: `libglfw3-dev`)
    - `gl` (apt: `libgl-dev`)
+   - `cgal` (apt: `libcgal-dev`)
 2. Kompiluj w głównym katalogu przy pomocy `$ make`
 3. Uruchom przy pomocy `$ make run`
 

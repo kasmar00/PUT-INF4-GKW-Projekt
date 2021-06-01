@@ -3,7 +3,7 @@
 CXX=g++
 CXXFLAGS=-Wall -std=c++2a
 CPPFLAGS=-iquote.
-LDLIBS=-lGL -lglfw -lGLEW
+LDLIBS=-lGL -lglfw -lGLEW -lgmp
 LDFLAGS=
 
 export MESA_GL_VERSION_OVERRIDE=3.3

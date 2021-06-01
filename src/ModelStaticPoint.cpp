@@ -47,8 +47,8 @@ void ModelStaticPoint::setDirection(int direction) {
     this->direction = direction;
 }
 void ModelStaticPoint::draw(glm::mat4 M) {
-    M = glm::translate(M, glm::vec3(this->locationX, 0, this->locationY));
-    M = glm::rotate(M, this->direction * PI / 180, glm::vec3(0.0f, 1.0f, 0.0f));  //Pomnóż macierz modelu razy macierz obrotu o kąt angle wokół osi Y
+    M = glm::translate(M, glm::vec3(this->locationX, 0, this->locationY));             //przeniesienie w miejsce docelowe
+    M = glm::rotate(M, -1 * this->direction * PI / 180, glm::vec3(0.0f, 1.0f, 0.0f));  //Obrót wokół osi Y
 
     glUniformMatrix4fv(spColored->u("M"), 1, false, glm::value_ptr(M));  //ładowanie macierzy modelu
 

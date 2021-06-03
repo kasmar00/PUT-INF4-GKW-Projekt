@@ -31,7 +31,7 @@ clean: mostlyclean
 distclean: clean
 	$(RM) -r libs/lodepng.*
 
-bin/main.out: $(OBJ) $(MY_LIBS) bin/
+bin/main.out: $(MY_LIBS) $(OBJ) bin/
 	$(CXX) -o $@ $(LDFLAGS) $(OBJ) $(MY_LIBS) $(LDLIBS)
 
 bin/:

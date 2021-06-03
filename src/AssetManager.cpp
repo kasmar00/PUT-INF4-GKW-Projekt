@@ -5,15 +5,18 @@
 #include "ModelTree.h"
 
 AssetManager::AssetManager() {
-    this->data_loader = DataLoader();
+    printf("Constructed asset manager!\n");
 }
 
 AssetManager::~AssetManager() {
+    printf("deleting asset manager!\n");
 }
 
 void AssetManager::generate_models_from_path(std::string path) {
     //area data
+    /*
     this->data_buildings = this->data_loader.load_planar_file(path + "/buildings");
+    GLuint textureBuilding = this->ass_loader.loadTexture("textures/bricks.png");
     for (auto i : data_buildings) {
         ModelStaticArea* tmp = new ModelStaticArea(i.coords);
 
@@ -28,6 +31,9 @@ void AssetManager::generate_models_from_path(std::string path) {
         } else {
             tmp->addWalls();
         }
+
+        tmp->addTexture(textureBuilding);
+
         tmp->addHeight(minheight, maxheight);
         tmp->createCoords();
         this->models.push_back(tmp);
@@ -67,6 +73,7 @@ void AssetManager::generate_models_from_path(std::string path) {
             m->setHeight(std::stoi(i.props["height"]));
         this->models.push_back(m);
     }
+    */
     this->data_benches = this->data_loader.load_point_file(path + "/benches");
     for (auto i : data_benches) {
         auto m = new ModelBench(i.coords.back());
@@ -78,6 +85,9 @@ void AssetManager::generate_models_from_path(std::string path) {
 
     //This asserts length of every load
     this->sanity_check_load();
+
+    // auto m = new ModelBench(glm::vec2(1.0f, 1.0f));
+    // this->models.push_back(m);
 }
 
 void AssetManager::sanity_check_load() {

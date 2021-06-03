@@ -82,6 +82,9 @@ void Renderer::initOpenGLProgram() {
     // glfwSetWindowFocusCallback(window, callbacks::focus_callback);
 
     glfwSetWindowSizeCallback(window, callbacks::window_size);
+
+    auto ass = AssetLoader();
+    texGlobal = ass.loadTexture("textures/bricks.png");
 }
 
 void Renderer::freeOpenGLProgram() {

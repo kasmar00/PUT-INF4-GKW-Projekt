@@ -11,6 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "AssetLoader.h"
 #include "constants.h"
 #include "shader.h"
 
@@ -39,11 +40,19 @@ void ModelStaticPoint::draw(glm::mat4 M) {
     glEnableVertexAttribArray(spColored->a("vertex"));
     glVertexAttribPointer(spColored->a("vertex"), 4, GL_FLOAT, false, 0, this->verts.data());
 
-    glEnableVertexAttribArray(spColored->a("color"));
-    glVertexAttribPointer(spColored->a("color"), 4, GL_FLOAT, false, 0, this->colors.data());
+    // glEnableVertexAttribArray(spColored->a("color"));
+    // glVertexAttribPointer(spColored->a("color"), 4, GL_FLOAT, false, 0, this->colors.data());
+
+    glEnableVertexAttribArray(spColored->a("texCoord"));
+    glVertexAttribPointer(spColored->a("texCoord"), 2, GL_FLOAT, false, 0, this->texCoords.data());
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texGlobal);
+    glUniform1i(spColored->u("tex"), 0);
 
     glDrawArrays(GL_TRIANGLES, 0, this->vertexCount);
 
     glDisableVertexAttribArray(spColored->a("vertex"));
-    glDisableVertexAttribArray(spColored->a("color"));
+    // glDisableVertexAttribArray(spColored->a("color"));
+    glDisableVertexAttribArray(spColored->a("texCoord"));
 }

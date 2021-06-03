@@ -49,6 +49,7 @@ void ModelStaticArea::createCoords() {
             this->drawCoords.push_back(ig);
             this->drawCoords.push_back(jr);
 
+            /*
             for (int i = 0; i < 6; i++) {
                 glm::vec4 color = glm::vec4(1.0f);
                 color.r = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
@@ -56,8 +57,17 @@ void ModelStaticArea::createCoords() {
                 color.b = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
                 this->colors.push_back(color);
             }
+            */
+
+            for (int i = 0; i < 2; i++) {
+                this->textureCoords.push_back(glm::vec2(0.0f, 1.0f));
+                this->textureCoords.push_back(glm::vec2(1.0f, 1.0f));
+                this->textureCoords.push_back(glm::vec2(1.0f, 0.0f));
+            }
         }
     }
+
+    // printf("created coords\n");
 
     //sufit
     try {
@@ -92,8 +102,11 @@ void ModelStaticArea::createCoordsPlanar(std::vector<glm::vec2> data) {
         this->drawCoords.push_back(a);
         this->drawCoords.push_back(b);
 
-        for (int i = 0; i < 3; i++)
-            this->colors.push_back(this->color);
+        // for (int i = 0; i < 3; i++)
+        // this->colors.push_back(this->color);
+        this->textureCoords.push_back(glm::vec2(0.0f, 1.0f));
+        this->textureCoords.push_back(glm::vec2(1.0f, 1.0f));
+        this->textureCoords.push_back(glm::vec2(1.0f, 0.0f));
     }
 }
 
@@ -140,6 +153,10 @@ void ModelStaticArea::addColor(glm::vec4 col) {
     this->color = col;
 }
 
+void ModelStaticArea::addTexture(GLuint texture) {
+    this->tex = texture;
+}
+
 void ModelStaticArea::draw(glm::mat4 M) {
     // M = glm::translate(M, glm::vec3(this->locationX, 0, this->locationY));
     // M = glm::rotate(M, this->direction * PI / 180, glm::vec3(0.0f, 1.0f, 0.0f));  //Pomnóż macierz modelu razy macierz obrotu o kąt angle wokół osi Y
@@ -149,11 +166,19 @@ void ModelStaticArea::draw(glm::mat4 M) {
     glEnableVertexAttribArray(spColored->a("vertex"));
     glVertexAttribPointer(spColored->a("vertex"), 4, GL_FLOAT, false, 0, this->drawCoords.data());
 
-    glEnableVertexAttribArray(spColored->a("color"));
-    glVertexAttribPointer(spColored->a("color"), 4, GL_FLOAT, false, 0, this->colors.data());
+    // glEnableVertexAttribArray(spColored->a("color"));
+    // glVertexAttribPointer(spColored->a("color"), 4, GL_FLOAT, false, 0, this->colors.data());
+
+    glEnableVertexAttribArray(spColored->a("texCoord"));
+    glVertexAttribPointer(spColored->a("texCoord"), 2, GL_FLOAT, false, 0, this->textureCoords.data());
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, this->tex);
+    glUniform1i(spColored->u("tex"), 0);
 
     glDrawArrays(GL_TRIANGLES, 0, this->drawCoords.size());
 
     glDisableVertexAttribArray(spColored->a("vertex"));
-    glDisableVertexAttribArray(spColored->a("color"));
+    // glDisableVertexAttribArray(spColored->a("color"));
+    glDisableVertexAttribArray(spColored->a("texCoord"));
 }

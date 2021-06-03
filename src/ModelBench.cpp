@@ -114,9 +114,64 @@ ModelBench::ModelBench(glm::vec2 pos) : ModelStaticPoint(pos) {
         1.0f, 1.0f, 1.0f, 1.0f,
         1.0f, 1.0f, 1.0f, 1.0f};
 
+    float cubeTexCoords[] = {
+        1.0f, 0.0f,  //A
+        0.0f, 1.0f,  //B
+        0.0f, 0.0f,  //C
+
+        1.0f, 0.0f,  //A
+        1.0f, 1.0f,  //D
+        0.0f, 1.0f,  //B
+
+        1.0f, 0.0f,  //A
+        0.0f, 1.0f,  //B
+        0.0f, 0.0f,  //C
+
+        1.0f, 0.0f,  //A
+        1.0f, 1.0f,  //D
+        0.0f, 1.0f,  //B
+
+        1.0f, 0.0f,  //A
+        0.0f, 1.0f,  //B
+        0.0f, 0.0f,  //C
+
+        1.0f, 0.0f,  //A
+        1.0f, 1.0f,  //D
+        0.0f, 1.0f,  //B
+
+        1.0f, 0.0f,  //A
+        0.0f, 1.0f,  //B
+        0.0f, 0.0f,  //C
+
+        1.0f, 0.0f,  //A
+        1.0f, 1.0f,  //D
+        0.0f, 1.0f,  //B
+
+        1.0f, 0.0f,  //A
+        0.0f, 1.0f,  //B
+        0.0f, 0.0f,  //C
+
+        1.0f, 0.0f,  //A
+        1.0f, 1.0f,  //D
+        0.0f, 1.0f,  //B
+
+        1.0f, 0.0f,  //A
+        0.0f, 1.0f,  //B
+        0.0f, 0.0f,  //C
+
+        1.0f, 0.0f,  //A
+        1.0f, 1.0f,  //D
+        0.0f, 1.0f,  //B
+
+    };
+
     for (int i = 0; i < 144; i++) {
         this->verts.push_back(myCubeVertices[i]);
         this->colors.push_back(myCubeColors[i]);
     }
+    for (int i = 0; i < 72; i++) {
+        this->texCoords.push_back(cubeTexCoords[i]);
+    }
+
     this->vertexCount = 36;
 }

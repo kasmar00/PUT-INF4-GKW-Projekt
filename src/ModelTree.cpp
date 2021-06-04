@@ -10,17 +10,20 @@ ModelTree::ModelTree(glm::vec2 pos) : ModelStaticPoint(pos) {
         0, -1, 0, 1,
         -1.5, 0, -1, 1};
 
-    float colorsa[] = {
-        1, 0, 0, 1,
-        0, 1, 0, 1,
-        0, 0, 1, 1,
-        1, 0, 0, 1,
-        0, 1, 0, 1,
-        0, 0, 1, 1};
+    float texcoords[] = {
+        1, 0,
+        1, 1,
+        0, 1,
+        1, 0,
+        1, 1,
+        0, 1};
 
     for (int i = 0; i < 24; i++) {
         this->verts.push_back(vertsa[i]);
-        this->colors.push_back(colorsa[i]);
     }
+
+    for (int i = 0; i < 12; i++)
+        this->texCoords.push_back(texcoords[i]);
+
     this->vertexCount = 6;
 }

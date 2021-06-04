@@ -9,16 +9,13 @@ GLuint texGlobal = 0;
 
 AssetLoader::AssetLoader() {
     // Sprawdzenie liczby jednostek teksturujących w karcie graficznej
-    GLint textureUnits;
-    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &textureUnits);
-    printf("Liczba jednostek teksturujących: %d\n", textureUnits);
-    printf("constructed asset loader at: %p\n", this);
+    printf("Constructed asset loader at: %p\n", this);
 }
 
 AssetLoader::~AssetLoader() {
-    // for (auto i : this->allTextures) {
-    //     glDeleteTextures(1, &i);
-    // }
+    for (auto i : this->allTextures) {
+        glDeleteTextures(1, &i);
+    }
 
     printf("Deleting asset loader\n");
 }
@@ -34,7 +31,8 @@ GLuint AssetLoader::loadTexture(std::string filename) {
 
     //Wczytaj obrazek
     unsigned error = lodepng::decode(image, width, height, filename.c_str());
-    printf("error: %d\n", error);
+    if (error)
+        printf("error: %d\n", error);
 
     printf("liczba bajtow tekstury %ld\n", image.size());
 
@@ -45,12 +43,20 @@ GLuint AssetLoader::loadTexture(std::string filename) {
     glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*)image.data());
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    //TODO: pobawić się mip mapami
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     printf("Loadeed texture %s\n", filename.c_str());
 
     this->allTextures.push_back(tex);
+    // texGlobal = tex;
 
     return tex;
 }

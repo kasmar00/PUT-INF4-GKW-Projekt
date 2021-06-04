@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
+#include <algorithm>
 #include <cassert>
 #include <cstdlib>
 #include <glm/glm.hpp>
@@ -25,7 +26,6 @@ typedef std::list<Polygon_2> Polygon_list;
 
 ModelStaticArea::ModelStaticArea(std::vector<glm::vec2> coords) : ModelStatic() {
     this->coords = coords;
-    this->color = glm::vec4(glm::vec4(0.4f, 0.6f, 0.3f, 1));
 
     this->walls = false;
     this->minHeight = 0.0f;
@@ -34,36 +34,47 @@ ModelStaticArea::ModelStaticArea(std::vector<glm::vec2> coords) : ModelStatic() 
 
 void ModelStaticArea::createCoords() {
     if (walls) {  //ściany tylko wtedy gdy maja być
+
+        enum coordEnum {
+            leftDown,
+            rightDown,
+            rightUp,
+            leftUp
+        };
+
         for (uint i = 0; i < this->coords.size() - 1; i++) {
-            glm::vec4 ig, ir, jg, jr;  //i is current, j is next, g-ground, r-roof
-            ig = glm::vec4(coords.data()[i].x, minHeight, coords.data()[i].y, 1);
-            jg = glm::vec4(coords.data()[i + 1].x, minHeight, coords.data()[i + 1].y, 1);
-            ir = glm::vec4(coords.data()[i].x, maxHeight, coords.data()[i].y, 1);
-            jr = glm::vec4(coords.data()[i + 1].x, maxHeight, coords.data()[i + 1].y, 1);
+            float dist = glm::distance(coords.data()[i], coords.data()[i + 1]);
 
-            this->drawCoords.push_back(ig);  //jeden trójkąt
-            this->drawCoords.push_back(ir);
-            this->drawCoords.push_back(jr);
+            std::vector<glm::vec2> textureSpace = {
+                //TODO: have fun with texture coords
+                glm::vec2(0.0f, this->minHeight / 4),
+                glm::vec2(std::max((int)(dist / 4), 1), this->minHeight / 4),
+                glm::vec2(std::max((int)(dist / 4), 1), this->maxHeight / 4),
+                glm::vec2(0.0f, this->maxHeight / 4),
+            };
 
-            this->drawCoords.push_back(jg);  //drugi trójkąt
-            this->drawCoords.push_back(ig);
-            this->drawCoords.push_back(jr);
+            std::vector<glm::vec4> vertexSpace = {
+                glm::vec4(coords.data()[i].x, minHeight, coords.data()[i].y, 1),
+                glm::vec4(coords.data()[i + 1].x, minHeight, coords.data()[i + 1].y, 1),
+                glm::vec4(coords.data()[i + 1].x, maxHeight, coords.data()[i + 1].y, 1),
+                glm::vec4(coords.data()[i].x, maxHeight, coords.data()[i].y, 1),
+            };
 
-            /*
-            for (int i = 0; i < 6; i++) {
-                glm::vec4 color = glm::vec4(1.0f);
-                color.r = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-                color.g = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-                color.b = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-                this->colors.push_back(color);
-            }
-            */
+            this->drawCoords.push_back(vertexSpace[leftDown]);  //jeden trójkąt
+            this->drawCoords.push_back(vertexSpace[leftUp]);
+            this->drawCoords.push_back(vertexSpace[rightUp]);
 
-            for (int i = 0; i < 2; i++) {
-                this->textureCoords.push_back(glm::vec2(0.0f, 1.0f));
-                this->textureCoords.push_back(glm::vec2(1.0f, 1.0f));
-                this->textureCoords.push_back(glm::vec2(1.0f, 0.0f));
-            }
+            this->textureCoords.push_back(textureSpace[leftDown]);
+            this->textureCoords.push_back(textureSpace[leftUp]);
+            this->textureCoords.push_back(textureSpace[rightUp]);
+
+            this->drawCoords.push_back(vertexSpace[rightDown]);  //drugi trójkąt
+            this->drawCoords.push_back(vertexSpace[leftDown]);
+            this->drawCoords.push_back(vertexSpace[rightUp]);
+
+            this->textureCoords.push_back(textureSpace[rightDown]);
+            this->textureCoords.push_back(textureSpace[leftDown]);
+            this->textureCoords.push_back(textureSpace[rightUp]);
         }
     }
 
@@ -102,11 +113,9 @@ void ModelStaticArea::createCoordsPlanar(std::vector<glm::vec2> data) {
         this->drawCoords.push_back(a);
         this->drawCoords.push_back(b);
 
-        // for (int i = 0; i < 3; i++)
-        // this->colors.push_back(this->color);
-        this->textureCoords.push_back(glm::vec2(0.0f, 1.0f));
-        this->textureCoords.push_back(glm::vec2(1.0f, 1.0f));
-        this->textureCoords.push_back(glm::vec2(1.0f, 0.0f));
+        this->textureCoords.push_back(glm::vec2(start.x, start.z));
+        this->textureCoords.push_back(glm::vec2(a.x, a.z));
+        this->textureCoords.push_back(glm::vec2(b.x, b.z));
     }
 }
 
@@ -149,10 +158,6 @@ void ModelStaticArea::addWalls() {
     this->walls = true;
 }
 
-void ModelStaticArea::addColor(glm::vec4 col) {
-    this->color = col;
-}
-
 void ModelStaticArea::addTexture(GLuint texture) {
     this->tex = texture;
 }
@@ -166,9 +171,6 @@ void ModelStaticArea::draw(glm::mat4 M) {
     glEnableVertexAttribArray(spColored->a("vertex"));
     glVertexAttribPointer(spColored->a("vertex"), 4, GL_FLOAT, false, 0, this->drawCoords.data());
 
-    // glEnableVertexAttribArray(spColored->a("color"));
-    // glVertexAttribPointer(spColored->a("color"), 4, GL_FLOAT, false, 0, this->colors.data());
-
     glEnableVertexAttribArray(spColored->a("texCoord"));
     glVertexAttribPointer(spColored->a("texCoord"), 2, GL_FLOAT, false, 0, this->textureCoords.data());
 
@@ -179,6 +181,5 @@ void ModelStaticArea::draw(glm::mat4 M) {
     glDrawArrays(GL_TRIANGLES, 0, this->drawCoords.size());
 
     glDisableVertexAttribArray(spColored->a("vertex"));
-    // glDisableVertexAttribArray(spColored->a("color"));
     glDisableVertexAttribArray(spColored->a("texCoord"));
 }

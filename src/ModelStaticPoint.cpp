@@ -31,6 +31,11 @@ void ModelStaticPoint::setHeight(float height) {
 void ModelStaticPoint::setDirection(int direction) {
     this->direction = direction;
 }
+
+void ModelStaticPoint::addTexture(GLuint texture) {
+    this->tex = texture;
+}
+
 void ModelStaticPoint::draw(glm::mat4 M) {
     M = glm::translate(M, glm::vec3(this->locationX, 0, this->locationY));
     M = glm::rotate(M, this->direction * PI / 180, glm::vec3(0.0f, 1.0f, 0.0f));  //Pomnóż macierz modelu razy macierz obrotu o kąt angle wokół osi Y
@@ -40,14 +45,11 @@ void ModelStaticPoint::draw(glm::mat4 M) {
     glEnableVertexAttribArray(spColored->a("vertex"));
     glVertexAttribPointer(spColored->a("vertex"), 4, GL_FLOAT, false, 0, this->verts.data());
 
-    // glEnableVertexAttribArray(spColored->a("color"));
-    // glVertexAttribPointer(spColored->a("color"), 4, GL_FLOAT, false, 0, this->colors.data());
-
     glEnableVertexAttribArray(spColored->a("texCoord"));
     glVertexAttribPointer(spColored->a("texCoord"), 2, GL_FLOAT, false, 0, this->texCoords.data());
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texGlobal);
+    glBindTexture(GL_TEXTURE_2D, this->tex);
     glUniform1i(spColored->u("tex"), 0);
 
     glDrawArrays(GL_TRIANGLES, 0, this->vertexCount);

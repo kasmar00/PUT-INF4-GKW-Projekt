@@ -53,6 +53,10 @@ Renderer::Renderer(AssetManager* assetManager) {
         exit(EXIT_FAILURE);
     }
 
+    GLint textureUnits;
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &textureUnits);
+    printf("Liczba jednostek teksturujących: %d\n", textureUnits);
+
     this->assetManager = assetManager;
 
     initOpenGLProgram();  //Operacje inicjujące
@@ -82,9 +86,6 @@ void Renderer::initOpenGLProgram() {
     // glfwSetWindowFocusCallback(window, callbacks::focus_callback);
 
     glfwSetWindowSizeCallback(window, callbacks::window_size);
-
-    auto ass = AssetLoader();
-    texGlobal = ass.loadTexture("textures/bricks.png");
 }
 
 void Renderer::freeOpenGLProgram() {

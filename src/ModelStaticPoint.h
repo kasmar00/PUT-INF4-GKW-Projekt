@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "GL/glew.h"
 #include "ModelStatic.h"
 
 class ModelStaticPoint : public ModelStatic {
@@ -11,10 +12,10 @@ class ModelStaticPoint : public ModelStatic {
     float locationY;
     float height;
     int direction;
+    GLuint tex;
 
    public:
     std::vector<float> verts;
-    std::vector<float> colors;
     std::vector<float> texCoords;
     int vertexCount;
 
@@ -24,6 +25,7 @@ class ModelStaticPoint : public ModelStatic {
 
     void setHeight(float height);
     void setDirection(int direction);
+    void addTexture(GLuint texture);
 };
 
 #endif  // __MODELSTATICPOINT_H__

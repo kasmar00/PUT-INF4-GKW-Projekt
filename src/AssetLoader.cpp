@@ -11,12 +11,12 @@ AssetLoader::AssetLoader() {
 AssetLoader::~AssetLoader() {
 }
 
-bool isLetter(char a) {
-    if ((a >= 'a' && a <= 'z') || (a >= 'A' && a <= 'Z'))
-        return 1;
-    else
-        return 0;
-}
+//bool isLetter(char a) {
+//    if ((a >= 'a' && a <= 'z') || (a >= 'A' && a <= 'Z'))
+//        return 1;
+//    else
+//        return 0;
+//}
 
 asl::model AssetLoader::loadObj(std::string fileName) {
     //autor pierwotnej wersji (w ModelTree): Jan Bylicki
@@ -52,7 +52,7 @@ asl::model AssetLoader::loadObj(std::string fileName) {
 
                 //TODO: skip all letters, not 2 characters like an idiot - DONE
                 //TESTME
-                while (isLetter(line.peek()))
+                while (isalpha(line.peek()))
                     line.ignore();
 
                 line >> v.x >> v.y >> v.z;

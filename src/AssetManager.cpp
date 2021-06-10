@@ -62,14 +62,14 @@ void AssetManager::generate_models_from_path(std::string path) {
 
     //OBJ loading
     //TODO: because there's no better place
-    auto treeObj = this->ass_loader.loadObj("polygon/assimp/tree.obj");
-    auto benchObj = this->ass_loader.loadObj("models/triangles.obj");
+    auto treeObj = this->ass_loader.loadObj("models/suzanne_tri.obj")[0];
+    auto benchObj = this->ass_loader.loadObj("models/bench_tri.obj")[0];
 
     //bez tego \/\/ jest  segfault a mi za mało płacą żeby go naprawiać efektywniej ¯\_(ツ)_/¯
-    std::vector<float>* treeVerts = new std::vector<float>(treeObj.first);
-    std::vector<float>* treeColors = new std::vector<float>(treeObj.second);
-    std::vector<float>* benchVerts = new std::vector<float>(benchObj.first);
-    std::vector<float>* benchColors = new std::vector<float>(benchObj.second);
+    std::vector<float>* treeVerts = new std::vector<float>(treeObj[asl::v]);
+    std::vector<float>* treeColors = new std::vector<float>(treeObj[asl::vt]);  //if everything loaded-change to texture
+    std::vector<float>* benchVerts = new std::vector<float>(benchObj[asl::v]);
+    std::vector<float>* benchColors = new std::vector<float>(benchObj[asl::vt]);
 
     //pointy data
     this->data_trees = this->data_loader.load_point_file(path + "/trees");

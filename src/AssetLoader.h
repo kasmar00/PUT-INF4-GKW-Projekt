@@ -7,13 +7,24 @@
 
 #include "Model.h"
 
+namespace asl {
+typedef std::vector<std::vector<float>> mesh;
+typedef std::vector<mesh> model;
+enum : int  // mesh indexes
+{
+    v,
+    vt,
+    vn
+};
+}  // namespace asl
+
 class AssetLoader {
    private:
    public:
     AssetLoader();
     ~AssetLoader();
 
-    std::pair<std::vector<float>, std::vector<float>> loadObj(std::string fileName);
+    asl::model loadObj(std::string fileName);
 };
 
 #endif

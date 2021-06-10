@@ -58,6 +58,7 @@ Renderer::Renderer(AssetManager* assetManager) {
     printf("Liczba jednostek teksturujących: %d\n", textureUnits);
 
     this->assetManager = assetManager;
+    this->modelDynamic = new ModelDynamic(glm::vec2(0, -15));  //load car
 
     initOpenGLProgram();  //Operacje inicjujące
 }
@@ -128,10 +129,11 @@ void Renderer::loop() {
         pos.x += 10 * glfwGetTime() * (speed.z * dir.x + speed.x * dir_left.x);
         pos.z += 10 * glfwGetTime() * (speed.z * dir.z + speed.x * dir_left.z);
 
-        // printf("%f %f %f\n", pos.x, pos.y, pos.z);
+        //printf("pos %f %f %f\n", pos.x, pos.y, pos.z);    //print camera pos
 
         glfwSetTime(0);
         this->drawScene();
+
         glfwPollEvents();
     }
 }
@@ -158,5 +160,8 @@ void Renderer::drawScene() {
     glUniformMatrix4fv(spSkyBox->u("P"), 1, false, glm::value_ptr(P));  //ładowanie macierzy rzutowania
     glUniformMatrix4fv(spSkyBox->u("V"), 1, false, glm::value_ptr(V));  //ładowanie macierzy widoku
     SkyBox::GetIntstance()->draw();
+    //draw car
+    this->modelDynamic->draw(glm::mat4(1.0f));
+
     glfwSwapBuffers(window);  //Skopiuj bufor tylny do bufora przedniego
 }

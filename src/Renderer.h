@@ -8,12 +8,14 @@
 
 #include "AssetManager.h"
 #include "Model.h"
+#include "ModelDynamic.h"
 #include "ModelStatic.h"
 
 class Renderer {
    private:
     glm::vec3 calcDir(float kat_x, float kat_y);  // rotate the move vector
     AssetManager* assetManager;
+    ModelDynamic* modelDynamic;
 
    public:
     GLFWwindow* window;

@@ -38,7 +38,7 @@ void AssetManager::generate_models_from_path(std::string path) {
     for (auto i : data_grass) {
         auto* tmp = new ModelStaticArea(i.coords);
         tmp->addColor(glm::vec4(0.8f, 1.0f, 0.0f, 1.0f));
-        tmp->addHeight(0.1f, 0.1f);  //fix for x fighting
+        tmp->addHeight(0.01f, 0.01f);  //fix for z fighting
         tmp->createCoords();
         this->models.push_back(tmp);
     }

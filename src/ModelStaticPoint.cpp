@@ -11,6 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "AssetLoader.h"
 #include "constants.h"
 #include "shader.h"
 
@@ -21,20 +22,8 @@ ModelStaticPoint::ModelStaticPoint(glm::vec2 pos, std::vector<float> *verts, std
     this->direction = rand() % 360;
 
     this->verts = verts;
-    this->colors = colors;
+    this->texCoords = colors;
     this->vertexCount = verts->size() / 4;
-}
-
-ModelStaticPoint::ModelStaticPoint(glm::vec2 pos) {
-    // to jest złe i niebezpieczne
-    this->locationX = pos.x;
-    this->locationY = pos.y;
-    this->height = 2;
-    this->direction = 0;
-
-    this->verts = new std::vector<float>;
-    this->colors = new std::vector<float>;
-    this->vertexCount = 0;
 }
 
 void ModelStaticPoint::setHeight(float height) {
@@ -46,6 +35,11 @@ void ModelStaticPoint::setHeight(float height) {
 void ModelStaticPoint::setDirection(int direction) {
     this->direction = direction;
 }
+
+void ModelStaticPoint::addTexture(GLuint texture) {
+    this->tex = texture;
+}
+
 void ModelStaticPoint::draw(glm::mat4 M) {
     M = glm::translate(M, glm::vec3(this->locationX, 0, this->locationY));             //przeniesienie w miejsce docelowe
     M = glm::rotate(M, -1 * this->direction * PI / 180, glm::vec3(0.0f, 1.0f, 0.0f));  //Obrót wokół osi Y
@@ -55,11 +49,15 @@ void ModelStaticPoint::draw(glm::mat4 M) {
     glEnableVertexAttribArray(spColored->a("vertex"));
     glVertexAttribPointer(spColored->a("vertex"), 4, GL_FLOAT, false, 0, this->verts->data());
 
-    glEnableVertexAttribArray(spColored->a("color"));
-    glVertexAttribPointer(spColored->a("color"), 4, GL_FLOAT, false, 0, this->colors->data());
+    glEnableVertexAttribArray(spColored->a("texCoord"));
+    glVertexAttribPointer(spColored->a("texCoord"), 2, GL_FLOAT, false, 0, this->texCoords->data());
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, this->tex);
+    glUniform1i(spColored->u("tex"), 0);
 
     glDrawArrays(GL_TRIANGLES, 0, this->vertexCount);
 
     glDisableVertexAttribArray(spColored->a("vertex"));
-    glDisableVertexAttribArray(spColored->a("color"));
+    glDisableVertexAttribArray(spColored->a("texCoord"));
 }

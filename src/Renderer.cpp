@@ -11,9 +11,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "ModelBench.h"
 #include "ModelStaticArea.h"
-#include "ModelTree.h"
+#include "ModelStaticPoint.h"
 #include "callbacks.h"
 #include "constants.h"
 #include "shader.h"
@@ -52,6 +51,10 @@ Renderer::Renderer(AssetManager* assetManager) {
         fprintf(stderr, "Nie można zainicjować GLEW.\n");
         exit(EXIT_FAILURE);
     }
+
+    GLint textureUnits;
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &textureUnits);
+    printf("Liczba jednostek teksturujących: %d\n", textureUnits);
 
     this->assetManager = assetManager;
 

@@ -1,20 +1,20 @@
 #include "AssetManager.h"
 
-#include "ModelBench.h"
 #include "ModelStaticArea.h"
-#include "ModelTree.h"
+#include "ModelStaticPoint.h"
 
 AssetManager::AssetManager() {
-    this->data_loader = DataLoader();
-    this->ass_loader = AssetLoader();
+    printf("Constructed asset manager!\n");
 }
 
 AssetManager::~AssetManager() {
+    printf("deleting asset manager!\n");
 }
 
 void AssetManager::generate_models_from_path(std::string path) {
     //area data
     this->data_buildings = this->data_loader.load_planar_file(path + "/buildings");
+    GLuint textureBuilding = this->ass_loader.loadTexture("textures/bricks.png");
     for (auto i : data_buildings) {
         ModelStaticArea* tmp = new ModelStaticArea(i.coords);
 
@@ -25,37 +25,43 @@ void AssetManager::generate_models_from_path(std::string path) {
         if (i.props.contains("building:min_level"))
             minheight = std::stoi(i.props["building:min_level"]) * 4;
         if (i.props["building"] == "roof" || i.props["building:part"] == "roof") {
-            tmp->addColor(glm::vec4(0.0f));
+            // tmp->addColor(glm::vec4(0.0f));
         } else {
             tmp->addWalls();
         }
+
+        tmp->addTexture(textureBuilding);
+
         tmp->addHeight(minheight, maxheight);
         tmp->createCoords();
         this->models.push_back(tmp);
     }
 
     this->data_grass = this->data_loader.load_planar_file(path + "/grass");
+    GLuint textureGrass = this->ass_loader.loadTexture("textures/Grass.png");
     for (auto i : data_grass) {
         auto* tmp = new ModelStaticArea(i.coords);
-        tmp->addColor(glm::vec4(0.8f, 1.0f, 0.0f, 1.0f));
         tmp->addHeight(0.01f, 0.01f);  //fix for z fighting
+        tmp->addTexture(textureGrass);
         tmp->createCoords();
         this->models.push_back(tmp);
     }
 
     this->data_areas = this->data_loader.load_planar_file(path + "/areas");
+    GLuint textureArea = this->ass_loader.loadTexture("textures/metal.png");
     for (auto i : data_areas) {
         auto* tmp = new ModelStaticArea(i.coords);
         tmp->addHeight(0, 0);
 
-        auto color = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
-        if (i.props["area:highway"] == "footway")
-            color = glm::vec4(0.3f, 0.3f, 0.3f, 1.0f);
-        else if (i.props["area:highway"] == "cycleway")
-            color = glm::vec4(0.8f, 0.4f, 0.4f, 1.0f);
+        // auto color = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
+        // if (i.props["area:highway"] == "footway")
+        //     color = glm::vec4(0.3f, 0.3f, 0.3f, 1.0f);
+        // else if (i.props["area:highway"] == "cycleway")
+        //     color = glm::vec4(0.8f, 0.4f, 0.4f, 1.0f);
         //TODO: add more conditions?
 
-        tmp->addColor(color);
+        // tmp->addColor(color);
+        tmp->addTexture(textureArea);
         tmp->createCoords();
         this->models.push_back(tmp);
     }
@@ -74,18 +80,18 @@ void AssetManager::generate_models_from_path(std::string path) {
     //pointy data
     this->data_trees = this->data_loader.load_point_file(path + "/trees");
     for (auto i : data_trees) {
-        auto m = new ModelTree(i.coords.back(), treeVerts, treeColors);
+        auto m = new ModelStaticPoint(i.coords.back(), treeVerts, treeColors);
         if (i.props.contains("height"))
             m->setHeight(std::stoi(i.props["height"]));
+        m->addTexture(textureBuilding);
         this->models.push_back(m);
     }
     this->data_benches = this->data_loader.load_point_file(path + "/benches");
     for (auto i : data_benches) {
-        //TODO: tymczasowo przeniesione na modelStaticPoint, w przyszłości rozważyć sens istnienia ModelBench i ModelTree
         auto m = new ModelStaticPoint(i.coords.back(), benchVerts, benchColors);
-        // auto m = new ModelBench(i.coords.back());
         if (i.props.contains("direction"))
             m->setDirection(std::stoi(i.props["direction"]));
+        m->addTexture(textureBuilding);
         this->models.push_back(m);
     }
     //TODO add lights

@@ -19,6 +19,7 @@ class ModelStaticPoint : public ModelStatic {
     std::vector<float> texCoords;
     int vertexCount;
 
+    ModelStaticPoint(glm::vec2 pos, std::vector<float> *verts, std::vector<float> *colors);
     ModelStaticPoint(glm::vec2 pos);
     virtual ~ModelStaticPoint(){};
     void draw(glm::mat4 M);

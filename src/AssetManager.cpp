@@ -67,10 +67,21 @@ void AssetManager::generate_models_from_path(std::string path) {
         this->models.push_back(tmp);
     }
 
+    //OBJ loading
+    //TODO: because there's no better place
+    auto treeObj = this->ass_loader.loadObj("models/suzanne_tri.obj")[0];
+    auto benchObj = this->ass_loader.loadObj("models/bench_tri.obj")[0];
+
+    //bez tego \/\/ jest  segfault a mi za mało płacą żeby go naprawiać efektywniej ¯\_(ツ)_/¯
+    std::vector<float>* treeVerts = new std::vector<float>(treeObj[asl::v]);
+    std::vector<float>* treeColors = new std::vector<float>(treeObj[asl::vt]);  //if everything loaded-change to texture
+    std::vector<float>* benchVerts = new std::vector<float>(benchObj[asl::v]);
+    std::vector<float>* benchColors = new std::vector<float>(benchObj[asl::vt]);
+
     //pointy data
     this->data_trees = this->data_loader.load_point_file(path + "/trees");
     for (auto i : data_trees) {
-        auto m = new ModelTree(i.coords.back());
+        auto m = new ModelTree(i.coords.back(), treeVerts, treeColors);
         if (i.props.contains("height"))
             m->setHeight(std::stoi(i.props["height"]));
         m->addTexture(textureBuilding);
@@ -78,7 +89,9 @@ void AssetManager::generate_models_from_path(std::string path) {
     }
     this->data_benches = this->data_loader.load_point_file(path + "/benches");
     for (auto i : data_benches) {
-        auto m = new ModelBench(i.coords.back());
+        //TODO: tymczasowo przeniesione na modelStaticPoint, w przyszłości rozważyć sens istnienia ModelBench i ModelTree
+        auto m = new ModelStaticPoint(i.coords.back(), benchVerts, benchColors);
+        // auto m = new ModelBench(i.coords.back());
         if (i.props.contains("direction"))
             m->setDirection(std::stoi(i.props["direction"]));
         m->addTexture(textureBuilding);

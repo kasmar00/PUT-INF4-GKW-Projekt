@@ -5,12 +5,23 @@
 #include <GLFW/glfw3.h>
 
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "Model.h"
 
-// dodać makra na hashmapę z danymi
 extern GLuint texGlobal;
+
+namespace asl {
+typedef std::vector<std::vector<float>> mesh;
+typedef std::vector<mesh> model;
+enum : int  // mesh indexes
+{
+    v,
+    vt,
+    vn
+};
+}  // namespace asl
 
 class AssetLoader {
    private:
@@ -21,6 +32,7 @@ class AssetLoader {
     ~AssetLoader();
 
     GLuint loadTexture(std::string filename);
+    asl::model loadObj(std::string fileName);
 };
 
 #endif

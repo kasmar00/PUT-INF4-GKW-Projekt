@@ -14,11 +14,27 @@
 #include "constants.h"
 #include "shader.h"
 
+ModelStaticPoint::ModelStaticPoint(glm::vec2 pos, std::vector<float> *verts, std::vector<float> *colors) {
+    this->locationX = pos.x;
+    this->locationY = pos.y;
+    this->height = 2;
+    this->direction = rand() % 360;
+
+    this->verts = verts;
+    this->colors = colors;
+    this->vertexCount = verts->size() / 4;
+}
+
 ModelStaticPoint::ModelStaticPoint(glm::vec2 pos) {
+    // to jest złe i niebezpieczne
     this->locationX = pos.x;
     this->locationY = pos.y;
     this->height = 2;
     this->direction = 0;
+
+    this->verts = new std::vector<float>;
+    this->colors = new std::vector<float>;
+    this->vertexCount = 0;
 }
 
 void ModelStaticPoint::setHeight(float height) {
@@ -31,16 +47,16 @@ void ModelStaticPoint::setDirection(int direction) {
     this->direction = direction;
 }
 void ModelStaticPoint::draw(glm::mat4 M) {
-    M = glm::translate(M, glm::vec3(this->locationX, 0, this->locationY));
-    M = glm::rotate(M, this->direction * PI / 180, glm::vec3(0.0f, 1.0f, 0.0f));  //Pomnóż macierz modelu razy macierz obrotu o kąt angle wokół osi Y
+    M = glm::translate(M, glm::vec3(this->locationX, 0, this->locationY));             //przeniesienie w miejsce docelowe
+    M = glm::rotate(M, -1 * this->direction * PI / 180, glm::vec3(0.0f, 1.0f, 0.0f));  //Obrót wokół osi Y
 
     glUniformMatrix4fv(spColored->u("M"), 1, false, glm::value_ptr(M));  //ładowanie macierzy modelu
 
     glEnableVertexAttribArray(spColored->a("vertex"));
-    glVertexAttribPointer(spColored->a("vertex"), 4, GL_FLOAT, false, 0, this->verts.data());
+    glVertexAttribPointer(spColored->a("vertex"), 4, GL_FLOAT, false, 0, this->verts->data());
 
     glEnableVertexAttribArray(spColored->a("color"));
-    glVertexAttribPointer(spColored->a("color"), 4, GL_FLOAT, false, 0, this->colors.data());
+    glVertexAttribPointer(spColored->a("color"), 4, GL_FLOAT, false, 0, this->colors->data());
 
     glDrawArrays(GL_TRIANGLES, 0, this->vertexCount);
 

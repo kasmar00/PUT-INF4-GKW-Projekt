@@ -15,8 +15,8 @@ class ModelStaticPoint : public ModelStatic {
     GLuint tex;
 
    public:
-    std::vector<float> verts;
-    std::vector<float> texCoords;
+    std::vector<float> *verts;
+    std::vector<float> *texCoords;
     int vertexCount;
 
     ModelStaticPoint(glm::vec2 pos, std::vector<float> *verts, std::vector<float> *colors);

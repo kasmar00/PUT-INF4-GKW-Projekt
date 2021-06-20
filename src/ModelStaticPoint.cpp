@@ -22,20 +22,8 @@ ModelStaticPoint::ModelStaticPoint(glm::vec2 pos, std::vector<float> *verts, std
     this->direction = rand() % 360;
 
     this->verts = verts;
-    this->colors = colors;
+    this->texCoords = colors;
     this->vertexCount = verts->size() / 4;
-}
-
-ModelStaticPoint::ModelStaticPoint(glm::vec2 pos) {
-    // to jest złe i niebezpieczne
-    this->locationX = pos.x;
-    this->locationY = pos.y;
-    this->height = 2;
-    this->direction = 0;
-
-    this->verts = new std::vector<float>;
-    this->colors = new std::vector<float>;
-    this->vertexCount = 0;
 }
 
 void ModelStaticPoint::setHeight(float height) {
@@ -62,7 +50,7 @@ void ModelStaticPoint::draw(glm::mat4 M) {
     glVertexAttribPointer(spColored->a("vertex"), 4, GL_FLOAT, false, 0, this->verts->data());
 
     glEnableVertexAttribArray(spColored->a("texCoord"));
-    glVertexAttribPointer(spColored->a("texCoord"), 2, GL_FLOAT, false, 0, this->texCoords.data());
+    glVertexAttribPointer(spColored->a("texCoord"), 2, GL_FLOAT, false, 0, this->texCoords->data());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, this->tex);

@@ -1,8 +1,7 @@
 #include "AssetManager.h"
 
-#include "ModelBench.h"
 #include "ModelStaticArea.h"
-#include "ModelTree.h"
+#include "ModelStaticPoint.h"
 
 AssetManager::AssetManager() {
     printf("Constructed asset manager!\n");
@@ -81,7 +80,7 @@ void AssetManager::generate_models_from_path(std::string path) {
     //pointy data
     this->data_trees = this->data_loader.load_point_file(path + "/trees");
     for (auto i : data_trees) {
-        auto m = new ModelTree(i.coords.back(), treeVerts, treeColors);
+        auto m = new ModelStaticPoint(i.coords.back(), treeVerts, treeColors);
         if (i.props.contains("height"))
             m->setHeight(std::stoi(i.props["height"]));
         m->addTexture(textureBuilding);
@@ -89,9 +88,7 @@ void AssetManager::generate_models_from_path(std::string path) {
     }
     this->data_benches = this->data_loader.load_point_file(path + "/benches");
     for (auto i : data_benches) {
-        //TODO: tymczasowo przeniesione na modelStaticPoint, w przyszłości rozważyć sens istnienia ModelBench i ModelTree
         auto m = new ModelStaticPoint(i.coords.back(), benchVerts, benchColors);
-        // auto m = new ModelBench(i.coords.back());
         if (i.props.contains("direction"))
             m->setDirection(std::stoi(i.props["direction"]));
         m->addTexture(textureBuilding);
@@ -101,9 +98,6 @@ void AssetManager::generate_models_from_path(std::string path) {
 
     //This asserts length of every load
     this->sanity_check_load();
-
-    // auto m = new ModelBench(glm::vec2(1.0f, 1.0f));
-    // this->models.push_back(m);
 }
 
 void AssetManager::sanity_check_load() {

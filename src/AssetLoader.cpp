@@ -1,6 +1,5 @@
 #include "AssetLoader.h"
 
-
 #include <iostream>
 #include <vector>
 

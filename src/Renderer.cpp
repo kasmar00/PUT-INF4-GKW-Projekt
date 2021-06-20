@@ -11,9 +11,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "ModelBench.h"
 #include "ModelStaticArea.h"
-#include "ModelTree.h"
+#include "ModelStaticPoint.h"
 #include "callbacks.h"
 #include "constants.h"
 #include "shader.h"

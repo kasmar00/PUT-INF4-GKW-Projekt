@@ -1,6 +1,7 @@
 #include "AssetManager.h"
 
 #include "ModelStaticArea.h"
+#include "ModelStaticPlanar.h"
 #include "ModelStaticPoint.h"
 
 AssetManager::AssetManager() {
@@ -16,7 +17,7 @@ void AssetManager::generate_models_from_path(std::string path) {
     this->data_buildings = this->data_loader.load_planar_file(path + "/buildings");
     GLuint textureBuilding = this->ass_loader.loadTexture("textures/bricks.png");
     for (auto i : data_buildings) {
-        ModelStaticArea* tmp = new ModelStaticArea(i.coords);
+        ModelStaticArea* building = new ModelStaticArea(i.coords);
 
         float maxheight = 4;
         float minheight = 0;
@@ -25,23 +26,28 @@ void AssetManager::generate_models_from_path(std::string path) {
         if (i.props.contains("building:min_level"))
             minheight = std::stoi(i.props["building:min_level"]) * 4;
         if (i.props["building"] == "roof" || i.props["building:part"] == "roof") {
-            // tmp->addColor(glm::vec4(0.0f));
+            // building->addColor(glm::vec4(0.0f));
         } else {
-            tmp->addWalls();
+            building->addWalls();
         }
 
-        tmp->addTexture(textureBuilding);
+        ModelStaticPlanar* roof = new ModelStaticPlanar(i.coords, maxheight);
+        roof->createCoords();
+        roof->addTexture(textureBuilding);
+        this->models.push_back(roof);
 
-        tmp->addHeight(minheight, maxheight);
-        tmp->createCoords();
-        this->models.push_back(tmp);
+        building->addTexture(textureBuilding);
+
+        building->addHeight(minheight, maxheight);
+        building->createCoords();
+        this->models.push_back(building);
     }
 
     this->data_grass = this->data_loader.load_planar_file(path + "/grass");
     GLuint textureGrass = this->ass_loader.loadTexture("textures/Grass.png");
     for (auto i : data_grass) {
-        auto* tmp = new ModelStaticArea(i.coords);
-        tmp->addHeight(0.01f, 0.01f);  //fix for z fighting
+        auto* tmp = new ModelStaticPlanar(i.coords, 0.01f);
+        // tmp->addHeight(0.01f, 0.01f);  //fix for z fighting
         tmp->addTexture(textureGrass);
         tmp->createCoords();
         this->models.push_back(tmp);
@@ -50,8 +56,8 @@ void AssetManager::generate_models_from_path(std::string path) {
     this->data_areas = this->data_loader.load_planar_file(path + "/areas");
     GLuint textureArea = this->ass_loader.loadTexture("textures/metal.png");
     for (auto i : data_areas) {
-        auto* tmp = new ModelStaticArea(i.coords);
-        tmp->addHeight(0, 0);
+        auto* tmp = new ModelStaticPlanar(i.coords, 0);
+        // tmp->addHeight(0, 0);
 
         // auto color = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
         // if (i.props["area:highway"] == "footway")

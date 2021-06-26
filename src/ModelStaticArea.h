@@ -15,9 +15,6 @@ class ModelStaticArea : public ModelStatic {
     float minHeight;
     bool walls;
 
-    void createCoordsPlanar(std::vector<glm::vec2> data);
-    std::vector<std::vector<glm::vec2>> divideIntoConvex(std::vector<glm::vec2> coords, bool dir);
-
    public:
     ModelStaticArea(std::vector<glm::vec2> coords);
     virtual ~ModelStaticArea(){};

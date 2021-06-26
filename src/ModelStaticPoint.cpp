@@ -36,10 +36,6 @@ void ModelStaticPoint::setDirection(int direction) {
     this->direction = direction;
 }
 
-void ModelStaticPoint::addTexture(GLuint texture) {
-    this->tex = texture;
-}
-
 void ModelStaticPoint::draw(glm::mat4 M) {
     M = glm::translate(M, glm::vec3(this->locationX, 0, this->locationY));             //przeniesienie w miejsce docelowe
     M = glm::rotate(M, -1 * this->direction * PI / 180, glm::vec3(0.0f, 1.0f, 0.0f));  //Obrót wokół osi Y

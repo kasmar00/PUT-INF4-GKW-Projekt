@@ -1,5 +1,6 @@
 #include "AssetManager.h"
 
+#include "AssetFactory.h"
 #include "ModelStaticArea.h"
 #include "ModelStaticPlanar.h"
 #include "ModelStaticPoint.h"
@@ -14,62 +15,24 @@ AssetManager::~AssetManager() {
 
 void AssetManager::generate_models_from_path(std::string path) {
     //area data
+    AssetFactory factory;
+
     this->data_buildings = this->data_loader.load_planar_file(path + "/buildings");
-    GLuint textureBuilding = this->ass_loader.loadTexture("textures/bricks.png");
+    factory.addTexture("building", this->ass_loader.loadTexture("textures/bricks.png"));
     for (auto i : data_buildings) {
-        ModelStaticArea* building = new ModelStaticArea(i.coords);
-
-        float maxheight = 4;
-        float minheight = 0;
-        if (i.props.contains("building:levels"))
-            maxheight = std::stoi(i.props["building:levels"]) * 4;
-        if (i.props.contains("building:min_level"))
-            minheight = std::stoi(i.props["building:min_level"]) * 4;
-        if (i.props["building"] == "roof" || i.props["building:part"] == "roof") {
-            // building->addColor(glm::vec4(0.0f));
-        } else {
-            building->addWalls();
-        }
-
-        ModelStaticPlanar* roof = new ModelStaticPlanar(i.coords, maxheight);
-        roof->createCoords();
-        roof->addTexture(textureBuilding);
-        this->models.push_back(roof);
-
-        building->addTexture(textureBuilding);
-
-        building->addHeight(minheight, maxheight);
-        building->createCoords();
-        this->models.push_back(building);
+        factory.createBuilding(i);
     }
 
     this->data_grass = this->data_loader.load_planar_file(path + "/grass");
-    GLuint textureGrass = this->ass_loader.loadTexture("textures/Grass.png");
+    factory.addTexture("grass", this->ass_loader.loadTexture("textures/Grass.png"));
     for (auto i : data_grass) {
-        auto* tmp = new ModelStaticPlanar(i.coords, 0.01f);
-        // tmp->addHeight(0.01f, 0.01f);  //fix for z fighting
-        tmp->addTexture(textureGrass);
-        tmp->createCoords();
-        this->models.push_back(tmp);
+        factory.createGrass(i);
     }
 
     this->data_areas = this->data_loader.load_planar_file(path + "/areas");
-    GLuint textureArea = this->ass_loader.loadTexture("textures/metal.png");
+    factory.addTexture("area", this->ass_loader.loadTexture("textures/metal.png"));
     for (auto i : data_areas) {
-        auto* tmp = new ModelStaticPlanar(i.coords, 0);
-        // tmp->addHeight(0, 0);
-
-        // auto color = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
-        // if (i.props["area:highway"] == "footway")
-        //     color = glm::vec4(0.3f, 0.3f, 0.3f, 1.0f);
-        // else if (i.props["area:highway"] == "cycleway")
-        //     color = glm::vec4(0.8f, 0.4f, 0.4f, 1.0f);
-        //TODO: add more conditions?
-
-        // tmp->addColor(color);
-        tmp->addTexture(textureArea);
-        tmp->createCoords();
-        this->models.push_back(tmp);
+        factory.createArea(i);
     }
 
     //OBJ loading
@@ -86,21 +49,15 @@ void AssetManager::generate_models_from_path(std::string path) {
     //pointy data
     this->data_trees = this->data_loader.load_point_file(path + "/trees");
     for (auto i : data_trees) {
-        auto m = new ModelStaticPoint(i.coords.back(), treeVerts, treeColors);
-        if (i.props.contains("height"))
-            m->setHeight(std::stoi(i.props["height"]));
-        m->addTexture(textureBuilding);
-        this->models.push_back(m);
+        factory.createPoint(i, "building", treeVerts, treeColors);
     }
     this->data_benches = this->data_loader.load_point_file(path + "/benches");
     for (auto i : data_benches) {
-        auto m = new ModelStaticPoint(i.coords.back(), benchVerts, benchColors);
-        if (i.props.contains("direction"))
-            m->setDirection(std::stoi(i.props["direction"]));
-        m->addTexture(textureBuilding);
-        this->models.push_back(m);
+        factory.createPoint(i, "building", benchVerts, benchColors);
     }
     //TODO add lights
+
+    this->models = factory.getModels();
 
     //This asserts length of every load
     this->sanity_check_load();

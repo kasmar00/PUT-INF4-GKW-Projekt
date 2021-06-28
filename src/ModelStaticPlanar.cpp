@@ -8,8 +8,6 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
-#include <algorithm>
-#include <cassert>
 #include <cstdlib>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

@@ -74,6 +74,7 @@ std::vector<glm::vec4> AssetManager::getLamps() {
     std::vector<glm::vec4> tmp;
     for (auto i : this->data_lamps)
         tmp.push_back(glm::vec4(i.coords.back().x, 6, i.coords.back().y, 1));
+    return tmp;
 }
 
 void AssetManager::sanity_check_load() {

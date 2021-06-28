@@ -82,8 +82,10 @@ def prepere(dump):
                 benches[1].append(y)
                 benches["prop"].append(thisprop)
 
-    centerx = (max(objx)+min(objx))/2
-    centery = (max(objy)+min(objy))/2
+    # centerx = (max(objx)+min(objx))/2
+    # centery = (max(objy)+min(objy))/2
+    centerx = sum(objx)/len(objx)
+    centery = sum(objy)/len(objy)
     trees[0] = [x-centerx for x in trees[0]]
     trees[1] = [y-centery for y in trees[1]]
     lights[0] = [x-centerx for x in lights[0]]

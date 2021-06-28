@@ -39,12 +39,15 @@ void AssetManager::generate_models_from_path(std::string path) {
     //TODO: because there's no better place
     auto treeObj = this->ass_loader.loadObj("models/suzanne_tri.obj")[0];
     auto benchObj = this->ass_loader.loadObj("models/bench_tri.obj")[0];
+    auto lampObj = this->ass_loader.loadObj("models/flaga.obj")[0];
 
     //bez tego \/\/ jest  segfault a mi za mało płacą żeby go naprawiać efektywniej ¯\_(ツ)_/¯
     std::vector<float>* treeVerts = new std::vector<float>(treeObj[asl::v]);
     std::vector<float>* treeColors = new std::vector<float>(treeObj[asl::vt]);  //if everything loaded-change to texture
     std::vector<float>* benchVerts = new std::vector<float>(benchObj[asl::v]);
     std::vector<float>* benchColors = new std::vector<float>(benchObj[asl::vt]);
+    std::vector<float>* lampVerts = new std::vector<float>(lampObj[asl::v]);
+    std::vector<float>* lampColors = new std::vector<float>(lampObj[asl::vt]);
 
     //pointy data
     this->data_trees = this->data_loader.load_point_file(path + "/trees");
@@ -55,12 +58,22 @@ void AssetManager::generate_models_from_path(std::string path) {
     for (auto i : data_benches) {
         factory.createPoint(i, "building", benchVerts, benchColors);
     }
-    //TODO add lights
+
+    this->data_lamps = this->data_loader.load_point_file(path + "/lights");
+    for (auto i : data_lamps) {
+        factory.createPoint(i, "building", lampVerts, lampColors);
+    }
 
     this->models = factory.getModels();
 
     //This asserts length of every load
     this->sanity_check_load();
+}
+
+std::vector<glm::vec4> AssetManager::getLamps() {
+    std::vector<glm::vec4> tmp;
+    for (auto i : this->data_lamps)
+        tmp.push_back(glm::vec4(i.coords.back().x, 6, i.coords.back().y, 1));
 }
 
 void AssetManager::sanity_check_load() {
@@ -69,6 +82,7 @@ void AssetManager::sanity_check_load() {
     printf("Loaded %ld areas\n", data_areas.size());
     printf("Loaded %ld trees\n", data_trees.size());
     printf("Loaded %ld benches\n", data_benches.size());
+    printf("Loaded %ld lamps\n", data_lamps.size());
     for (auto i : data_buildings) {
         assert(i.coords.size() > 0);  //sprawdzenie czy obiekt zawiera koordynaty
         assert(i.props.size() > 0);   //sprawdzenie czy obiekt zawiera tagi

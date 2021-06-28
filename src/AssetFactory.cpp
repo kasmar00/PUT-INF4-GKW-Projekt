@@ -34,7 +34,7 @@ void AssetFactory::createBuilding(struct object_data data) {
 
 void AssetFactory::createGrass(struct object_data data) {
     // creates grass
-    auto* tmp = new ModelStaticPlanar(data.coords, 0.001f);
+    auto* tmp = new ModelStaticPlanar(data.coords, 0.01f);
     tmp->addTexture(this->textures["grass"]);
     this->models.push_back(tmp);
 

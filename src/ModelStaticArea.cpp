@@ -64,6 +64,11 @@ void ModelStaticArea::createCoords() {
             this->textureCoords.push_back(textureSpace[rightDown]);
             this->textureCoords.push_back(textureSpace[leftDown]);
             this->textureCoords.push_back(textureSpace[rightUp]);
+
+            glm::vec4 normal = glm::vec4(glm::cross(glm::vec3(vertexSpace[leftDown] - vertexSpace[leftUp]), glm::vec3(vertexSpace[leftDown] - vertexSpace[rightUp])), 0);
+            for (int i = 0; i < 6; i++) {
+                this->normals.push_back(normal);
+            }
         }
     }
 }

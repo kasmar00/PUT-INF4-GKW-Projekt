@@ -43,25 +43,28 @@ void AssetManager::generate_models_from_path(std::string path) {
 
     //bez tego \/\/ jest  segfault a mi za mało płacą żeby go naprawiać efektywniej ¯\_(ツ)_/¯
     std::vector<float>* treeVerts = new std::vector<float>(treeObj[asl::v]);
-    std::vector<float>* treeColors = new std::vector<float>(treeObj[asl::vt]);  //if everything loaded-change to texture
+    std::vector<float>* treeTexture = new std::vector<float>(treeObj[asl::vt]);  //if everything loaded-change to texture
+    std::vector<float>* treeNormals = new std::vector<float>(treeObj[asl::vn]);
     std::vector<float>* benchVerts = new std::vector<float>(benchObj[asl::v]);
-    std::vector<float>* benchColors = new std::vector<float>(benchObj[asl::vt]);
+    std::vector<float>* benchTexture = new std::vector<float>(benchObj[asl::vt]);
+    std::vector<float>* benchNormals = new std::vector<float>(benchObj[asl::vn]);
     std::vector<float>* lampVerts = new std::vector<float>(lampObj[asl::v]);
-    std::vector<float>* lampColors = new std::vector<float>(lampObj[asl::vt]);
+    std::vector<float>* lampTexture = new std::vector<float>(lampObj[asl::vt]);
+    std::vector<float>* lampNormals = new std::vector<float>(lampObj[asl::vn]);
 
     //pointy data
     this->data_trees = this->data_loader.load_point_file(path + "/trees");
     for (auto i : data_trees) {
-        factory.createPoint(i, "building", treeVerts, treeColors);
+        factory.createPoint(i, "building", treeVerts, treeTexture, treeNormals);
     }
     this->data_benches = this->data_loader.load_point_file(path + "/benches");
     for (auto i : data_benches) {
-        factory.createPoint(i, "building", benchVerts, benchColors);
+        factory.createPoint(i, "building", benchVerts, benchTexture, benchNormals);
     }
 
     this->data_lamps = this->data_loader.load_point_file(path + "/lights");
     for (auto i : data_lamps) {
-        factory.createPoint(i, "building", lampVerts, lampColors);
+        factory.createPoint(i, "building", lampVerts, lampTexture, lampNormals);
     }
 
     this->models = factory.getModels();

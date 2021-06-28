@@ -21,12 +21,16 @@ typedef Partition_traits_2::Point_2 Point_2;
 typedef Partition_traits_2::Polygon_2 Polygon_2;  // a polygon of indices
 typedef std::list<Polygon_2> Polygon_list;
 
-ModelStaticPlanar::ModelStaticPlanar(std::vector<glm::vec2> data, float height) {
+ModelStaticPlanar::ModelStaticPlanar(std::vector<glm::vec2> data, float height, bool dir) {
     this->coords = data;
     this->height = height;
+    this->dir = dir;
 
     this->createCoords();
 }
+
+ModelStaticPlanar::ModelStaticPlanar(std::vector<glm::vec2> data, float height)
+    : ModelStaticPlanar(data, height, 1) {}
 
 ModelStaticPlanar::~ModelStaticPlanar() {
 }
@@ -46,6 +50,10 @@ void ModelStaticPlanar::createCoords() {
             std::cerr << this->coords.data()[0].x << " " << this->coords.data()[0].y << std::endl
                       << std::endl;
         }
+    }
+    float len = 2 * dir - 1;  //this maps 0 to -1 and 1 to 1
+    for (uint i = 0; i < verts.size(); i++) {
+        normals.push_back(glm::vec4(0, len, 0, 0));
     }
 }
 

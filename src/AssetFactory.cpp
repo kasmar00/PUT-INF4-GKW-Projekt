@@ -59,10 +59,10 @@ void AssetFactory::createArea(struct object_data data) {
     this->models.push_back(tmp);
 }
 
-void AssetFactory::createPoint(struct object_data data, std::string texture, std::vector<float>* verts, std::vector<float>* texCoords) {
+void AssetFactory::createPoint(struct object_data data, std::string texture, std::vector<float>* verts, std::vector<float>* texCoords, std::vector<float>* normals) {
     // creates a pointy object
 
-    auto m = new ModelStaticPoint(data.coords.back(), verts, texCoords);
+    auto m = new ModelStaticPoint(data.coords.back(), verts, texCoords, normals);
     if (data.props.contains("direction"))
         m->setDirection(std::stoi(data.props["direction"]));
     m->addTexture(this->textures[texture]);

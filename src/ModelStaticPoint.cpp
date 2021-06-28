@@ -15,14 +15,15 @@
 #include "constants.h"
 #include "shader.h"
 
-ModelStaticPoint::ModelStaticPoint(glm::vec2 pos, std::vector<float> *verts, std::vector<float> *colors) {
+ModelStaticPoint::ModelStaticPoint(glm::vec2 pos, std::vector<float> *verts, std::vector<float> *texCoords, std::vector<float> *normals) {
     this->locationX = pos.x;
     this->locationY = pos.y;
     this->height = 2;
     this->direction = rand() % 360;
 
     this->verts = verts;
-    this->texCoords = colors;
+    this->texCoords = texCoords;
+    this->normals = normals;
     this->vertexCount = verts->size() / 4;
 }
 

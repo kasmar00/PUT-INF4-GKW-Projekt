@@ -26,6 +26,8 @@ typedef std::list<Polygon_2> Polygon_list;
 ModelStaticPlanar::ModelStaticPlanar(std::vector<glm::vec2> data, float height) {
     this->coords = data;
     this->height = height;
+
+    this->createCoords();
 }
 
 ModelStaticPlanar::~ModelStaticPlanar() {

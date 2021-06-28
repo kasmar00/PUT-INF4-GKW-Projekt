@@ -7,8 +7,6 @@
 void AssetFactory::createBuilding(struct object_data data) {
     // creates a bulding: walls, roof and floor
 
-    ModelStaticArea* walls = new ModelStaticArea(data.coords);
-
     float maxheight = 4;
     float minheight = 0;
     if (data.props.contains("building:levels"))
@@ -16,43 +14,38 @@ void AssetFactory::createBuilding(struct object_data data) {
     if (data.props.contains("building:min_level"))
         minheight = std::stoi(data.props["building:min_level"]) * 4;
     if (data.props["building"] == "roof" || data.props["building:part"] == "roof") {
-        // building->addColor(glm::vec4(0.0f));
-
-        // walls->addWalls();
-    } else {
-        walls->addWalls();
+        minheight = maxheight - 0.4f;
     }
 
+    ModelStaticArea* walls = new ModelStaticArea(data.coords, minheight, maxheight);
+
     ModelStaticPlanar* roof = new ModelStaticPlanar(data.coords, maxheight);
-    roof->createCoords();
     roof->addTexture(this->textures["building"]);
     this->models.push_back(roof);
 
-    //TODO: remove floor from roofs, nie tyle co remove co przenieśc 20-30 cm poniżej dachu
     ModelStaticPlanar* floor = new ModelStaticPlanar(data.coords, minheight);
-    floor->createCoords();
     floor->addTexture(this->textures["building"]);
     this->models.push_back(floor);
 
     walls->addTexture(this->textures["building"]);
 
-    walls->addHeight(minheight, maxheight);
-    walls->createCoords();
     this->models.push_back(walls);
 }
 
 void AssetFactory::createGrass(struct object_data data) {
     // creates grass
-    auto* tmp = new ModelStaticPlanar(data.coords, 0.01f);
-    // tmp->addHeight(0.01f, 0.01f);  //fix for z fighting
+    auto* tmp = new ModelStaticPlanar(data.coords, 0.001f);
     tmp->addTexture(this->textures["grass"]);
-    tmp->createCoords();
     this->models.push_back(tmp);
+
+    //grass needs walls becouse of corretion for Z fighting
+    auto* walls = new ModelStaticArea(data.coords, 0, 0.01f);
+    walls->addTexture(this->textures["grass"]);
+    this->models.push_back(walls);
 }
 
 void AssetFactory::createArea(struct object_data data) {
     auto* tmp = new ModelStaticPlanar(data.coords, 0);
-    // tmp->addHeight(0, 0);
 
     // auto color = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
     // if (i.props["area:highway"] == "footway")
@@ -63,7 +56,6 @@ void AssetFactory::createArea(struct object_data data) {
 
     // tmp->addColor(color);
     tmp->addTexture(this->textures["area"]);
-    tmp->createCoords();
     this->models.push_back(tmp);
 }
 

@@ -13,17 +13,17 @@
 
 #include "shader.h"
 
-ModelStaticArea::ModelStaticArea(std::vector<glm::vec2> coords) : ModelStatic() {
+ModelStaticArea::ModelStaticArea(std::vector<glm::vec2> coords, float minHeight, float maxheight) : ModelStatic() {
     this->coords = coords;
 
-    this->walls = false;
-    this->minHeight = 0.0f;
-    this->maxHeight = 0.0f;
+    this->minHeight = minHeight;
+    this->maxHeight = maxheight;
+
+    this->createCoords();
 }
 
 void ModelStaticArea::createCoords() {
-    if (walls) {  //ściany tylko wtedy gdy maja być
-
+    {
         enum coordEnum {
             leftDown,
             rightDown,
@@ -66,23 +66,9 @@ void ModelStaticArea::createCoords() {
             this->textureCoords.push_back(textureSpace[rightUp]);
         }
     }
-
-    // printf("created coords\n");
-}
-
-void ModelStaticArea::addHeight(float min, float max) {
-    this->maxHeight = max;
-    this->minHeight = min;
-}
-
-void ModelStaticArea::addWalls() {
-    this->walls = true;
 }
 
 void ModelStaticArea::draw(glm::mat4 M) {
-    // M = glm::translate(M, glm::vec3(this->locationX, 0, this->locationY));
-    // M = glm::rotate(M, this->direction * PI / 180, glm::vec3(0.0f, 1.0f, 0.0f));  //Pomnóż macierz modelu razy macierz obrotu o kąt angle wokół osi Y
-
     glUniformMatrix4fv(spColored->u("M"), 1, false, glm::value_ptr(M));  //ładowanie macierzy modelu
 
     glEnableVertexAttribArray(spColored->a("vertex"));

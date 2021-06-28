@@ -13,6 +13,7 @@ class ModelStaticPlanar : public ModelStatic {
 
     float height;
 
+    void createCoords();
     void createCoordsPlanar(std::vector<glm::vec2> data);
     std::vector<std::vector<glm::vec2>> divideIntoConvex(std::vector<glm::vec2> coords, bool dir);
 
@@ -20,7 +21,6 @@ class ModelStaticPlanar : public ModelStatic {
     ModelStaticPlanar(std::vector<glm::vec2> data, float height);
     ~ModelStaticPlanar();
 
-    void createCoords();
     void draw(glm::mat4 M);
 };
 

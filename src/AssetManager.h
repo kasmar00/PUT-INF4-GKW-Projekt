@@ -16,6 +16,7 @@ class AssetManager {
     //pointy data
     std::vector<object_data> data_trees;
     std::vector<object_data> data_benches;
+    std::vector<object_data> data_lamps;
 
     AssetLoader ass_loader;
     DataLoader data_loader;
@@ -26,6 +27,8 @@ class AssetManager {
     ~AssetManager();
     void sanity_check_load();
     void generate_models_from_path(std::string path);
+
+    std::vector<glm::vec4> getLamps();
 };
 
 #endif

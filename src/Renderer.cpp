@@ -134,6 +134,18 @@ void Renderer::drawScene() {
     glUniformMatrix4fv(spColored->u("P"), 1, false, glm::value_ptr(P));                        //ładowanie macierzy rzutowania
     glUniformMatrix4fv(spColored->u("V"), 1, false, glm::value_ptr(V));                        //ładowanie macierzy widoku
 
+    std::vector<float> lights;
+    for (auto i : assetManager->getLamps()) {
+        lights.push_back(i.x);
+        lights.push_back(i.y);
+        lights.push_back(i.z);
+        lights.push_back(1);
+    }
+
+    glUniform4f(spColored->u("light"), -33, 25, 74, 1);
+    glUniform4f(spColored->u("camera"), pos.x, pos.y, pos.z, 1);
+    glUniform3fv(spColored->u("lights"), lights.size(), lights.data());
+
     //rysowanie poszczególnych elementów
     for (auto i : this->assetManager->models) {
         i->draw(glm::mat4(1.0f));

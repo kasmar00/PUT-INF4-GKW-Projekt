@@ -65,7 +65,7 @@ void ModelStaticArea::createCoords() {
             this->textureCoords.push_back(textureSpace[leftDown]);
             this->textureCoords.push_back(textureSpace[rightUp]);
 
-            glm::vec4 normal = glm::vec4(glm::cross(glm::vec3(vertexSpace[leftDown] - vertexSpace[leftUp]), glm::vec3(vertexSpace[leftDown] - vertexSpace[rightUp])), 0);
+            glm::vec4 normal = glm::vec4(glm::cross(glm::vec3(vertexSpace[leftDown] - vertexSpace[rightUp]), glm::vec3(vertexSpace[leftDown] - vertexSpace[leftUp])), 0);
             for (int i = 0; i < 6; i++) {
                 this->normals.push_back(normal);
             }
@@ -82,6 +82,9 @@ void ModelStaticArea::draw(glm::mat4 M) {
     glEnableVertexAttribArray(spColored->a("texCoord"));
     glVertexAttribPointer(spColored->a("texCoord"), 2, GL_FLOAT, false, 0, this->textureCoords.data());
 
+    glEnableVertexAttribArray(spColored->a("normal"));
+    glVertexAttribPointer(spColored->a("normal"), 4, GL_FLOAT, false, 0, this->normals.data());
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, this->tex);
     glUniform1i(spColored->u("tex"), 0);
@@ -90,4 +93,5 @@ void ModelStaticArea::draw(glm::mat4 M) {
 
     glDisableVertexAttribArray(spColored->a("vertex"));
     glDisableVertexAttribArray(spColored->a("texCoord"));
+    glDisableVertexAttribArray(spColored->a("normal"));
 }

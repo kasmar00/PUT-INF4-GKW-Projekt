@@ -26,6 +26,8 @@ class Renderer {
     void loop();
     void drawScene();
 
+    std::vector<float> lights;
+
     static glm::vec3 speed;                     // speed on xyz
     static glm::vec2 speed_rot;                 // speed of rotation on xy
     static glm::vec3 pos;                       // current position

@@ -20,7 +20,7 @@
 glm::vec3 Renderer::speed = glm::vec3(0, 0, 0);
 glm::vec2 Renderer::speed_rot = glm::vec2(0, 0);
 
-glm::vec3 Renderer::pos = glm::vec3(0.0f, 0.0f, -15.0f);  // początkowa pozycja
+glm::vec3 Renderer::pos = glm::vec3(0.0f, 0.0f, 0.0f);  // początkowa pozycja
 glm::vec2 Renderer::rot = glm::vec2(0.0f, 0.0f);
 
 float Renderer::aspectRatio = 1.0f;
@@ -103,6 +103,15 @@ glm::vec3 Renderer::calcDir(float kat_x, float kat_y) {
 void Renderer::loop() {
     glm::vec3 dir = glm::vec3(0, 0, 0);
     glm::vec3 dir_left = glm::vec3(0, 0, 0);
+
+    for (auto i : assetManager->getLamps()) {
+        lights.push_back(i.x);
+        lights.push_back(i.y);
+        lights.push_back(i.z);
+        lights.push_back(1);
+        std::cout << i.x << " " << i.y << " " << i.z << std::endl;
+    }
+
     while (!glfwWindowShouldClose(window)) {
         rot.x += Renderer::speed_rot.x * glfwGetTime();  //rotate the camera on x axis (up-down)
         rot.y += Renderer::speed_rot.y * glfwGetTime();  //rotate on y axis (left-right)
@@ -134,17 +143,10 @@ void Renderer::drawScene() {
     glUniformMatrix4fv(spColored->u("P"), 1, false, glm::value_ptr(P));                        //ładowanie macierzy rzutowania
     glUniformMatrix4fv(spColored->u("V"), 1, false, glm::value_ptr(V));                        //ładowanie macierzy widoku
 
-    std::vector<float> lights;
-    for (auto i : assetManager->getLamps()) {
-        lights.push_back(i.x);
-        lights.push_back(i.y);
-        lights.push_back(i.z);
-        lights.push_back(1);
-    }
-
     glUniform4f(spColored->u("light"), -33, 25, 74, 1);
     glUniform4f(spColored->u("camera"), pos.x, pos.y, pos.z, 1);
-    glUniform3fv(spColored->u("lights"), lights.size(), lights.data());
+    glUniform4fv(spColored->u("lights"), lights.size(), lights.data());
+    glUniform1i(spColored->u("count"), lights.size() / 4);
 
     //rysowanie poszczególnych elementów
     for (auto i : this->assetManager->models) {

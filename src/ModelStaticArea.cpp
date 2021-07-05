@@ -76,6 +76,8 @@ void ModelStaticArea::createCoords() {
 void ModelStaticArea::draw(glm::mat4 M) {
     glUniformMatrix4fv(spColored->u("M"), 1, false, glm::value_ptr(M));  //ładowanie macierzy modelu
 
+    glUniform4f(spColored->u("color"), color.r, color.g, color.b, color.a);
+
     glEnableVertexAttribArray(spColored->a("vertex"));
     glVertexAttribPointer(spColored->a("vertex"), 4, GL_FLOAT, false, 0, this->verts.data());
 

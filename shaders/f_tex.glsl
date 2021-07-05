@@ -7,6 +7,8 @@ uniform mat4 V;
 uniform vec4 lights[300];
 uniform int count;
 
+uniform vec4 color;
+
 out vec4 pixelColor; //Zmienna wyjsciowa fragment shadera. Zapisuje sie do niej ostateczny (prawie) kolor piksela
 
 //in vec4 ic; 
@@ -39,7 +41,6 @@ void main(void) {
 	vec4 ks = vec4(1, 1, 1, 1);
 
 	//Obliczenie modelu oświetlenia
-	//pixelColor= vec4(kd.rgb*d * nl, kd.a);
 	pixelColor=vec4(kd.rgb*0.3,kd.a);
 	vec3 tmp=vec3(0);
 	for (int i=0; i<count; i++){
@@ -47,4 +48,5 @@ void main(void) {
 	}
 	tmp=clamp(tmp,0,1);
 	pixelColor+=vec4(kd.rgb*tmp,0);
+	pixelColor*=color;
 }

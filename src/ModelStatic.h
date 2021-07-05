@@ -10,6 +10,7 @@
 class ModelStatic : public Model {
    protected:
     GLuint tex;
+    glm::vec4 color;
 
    public:
     ModelStatic(){};
@@ -17,6 +18,7 @@ class ModelStatic : public Model {
     virtual void draw(glm::mat4 M) = 0;
 
     void addTexture(GLuint texture);
+    void setColor(glm::vec4 col);
 };
 
 #endif  // __MODELSTATIC_H__

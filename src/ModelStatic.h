@@ -10,7 +10,7 @@
 class ModelStatic : public Model {
    protected:
     GLuint tex;
-    glm::vec4 color;
+    glm::vec4 color = glm::vec4(1);
 
    public:
     ModelStatic(){};

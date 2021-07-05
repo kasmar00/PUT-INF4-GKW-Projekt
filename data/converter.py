@@ -11,7 +11,7 @@ import string
 csvsep = "|"
 
 interestingAreaProps = ["building", "landuse",
-                        "height", "building:levels", "area:highway", "building:part", "building:min_level"]
+                        "height", "building:levels", "area:highway", "building:part", "building:min_level", "leisure"]
 interestingPointProps = ["highway", "natural",
                          "amenity", "height", "direction"]
 
@@ -146,8 +146,8 @@ def exportPoints(file, obj):
 
 
 def export(data, path):
-    path += ''.join(random.choices(string.ascii_uppercase +
-                                   string.digits, k=15))
+    # path += ''.join(random.choices(string.ascii_uppercase +
+    #                                string.digits, k=15))
     try:
         os.mkdir(path)
     except OSError:
@@ -163,6 +163,8 @@ def export(data, path):
         if "building" in i[2].keys() or "building:part" in i[2].keys():
             file = buildings
         elif i[2].get("landuse") == "grass":
+            file = grass
+        elif i[2].get("leisure") == "garden":
             file = grass
         elif "area:highway" in i[2].keys():
             file = areas

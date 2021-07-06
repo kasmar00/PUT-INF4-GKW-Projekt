@@ -39,7 +39,10 @@ void AssetManager::generate_models_from_path(std::string path) {
     //TODO: because there's no better place
     auto treeObj = this->ass_loader.loadObj("models/suzanne_tri.obj")[0];
     auto benchObj = this->ass_loader.loadObj("models/bench_tri.obj")[0];
-    auto lampObj = this->ass_loader.loadObj("models/flaga.obj")[0];
+    auto lampObj_all = this->ass_loader.loadObj("models/bylamp.obj");
+    auto lampObj = lampObj_all[0];
+    auto kloszObj = lampObj_all[1];
+    
 
     //bez tego \/\/ jest  segfault a mi za mało płacą żeby go naprawiać efektywniej ¯\_(ツ)_/¯
     std::vector<float>* treeVerts = new std::vector<float>(treeObj[asl::v]);
@@ -51,6 +54,9 @@ void AssetManager::generate_models_from_path(std::string path) {
     std::vector<float>* lampVerts = new std::vector<float>(lampObj[asl::v]);
     std::vector<float>* lampTexture = new std::vector<float>(lampObj[asl::vt]);
     std::vector<float>* lampNormals = new std::vector<float>(lampObj[asl::vn]);
+    std::vector<float>* kloszVerts = new std::vector<float>(kloszObj[asl::v]);
+    std::vector<float>* kloszTexture = new std::vector<float>(kloszObj[asl::vt]);
+    std::vector<float>* kloszNormals = new std::vector<float>(kloszObj[asl::vn]);
 
     //pointy data
     this->data_trees = this->data_loader.load_point_file(path + "/trees");
@@ -65,6 +71,7 @@ void AssetManager::generate_models_from_path(std::string path) {
     this->data_lamps = this->data_loader.load_point_file(path + "/lights");
     for (auto i : data_lamps) {
         factory.createPoint(i, "building", lampVerts, lampTexture, lampNormals);
+        factory.createPoint(i, "building", kloszVerts, kloszTexture, kloszNormals);
     }
 
     this->models = factory.getModels();
@@ -76,7 +83,7 @@ void AssetManager::generate_models_from_path(std::string path) {
 std::vector<glm::vec4> AssetManager::getLamps() {
     std::vector<glm::vec4> tmp;
     for (auto i : this->data_lamps)
-        tmp.push_back(glm::vec4(i.coords.back().x, 6, i.coords.back().y, 1));
+        tmp.push_back(glm::vec4(i.coords.back().x, 6.6, i.coords.back().y, 1));
     return tmp;
 }
 

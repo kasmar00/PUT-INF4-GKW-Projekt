@@ -48,10 +48,10 @@ void AssetFactory::createArea(struct object_data data) {
     auto* tmp = new ModelStaticPlanar(data.coords, 0);
 
     // auto color = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
-    // if (i.props["area:highway"] == "footway")
-    //     color = glm::vec4(0.3f, 0.3f, 0.3f, 1.0f);
-    // else if (i.props["area:highway"] == "cycleway")
-    //     color = glm::vec4(0.8f, 0.4f, 0.4f, 1.0f);
+    if (data.props["area:highway"] == "footway")
+        tmp->setColor(glm::vec4(0.3f, 0.3f, 0.3f, 1.0f));
+    else if (data.props["area:highway"] == "cycleway")
+        tmp->setColor(glm::vec4(0.8f, 0.4f, 0.4f, 1.0f));
     //TODO: add more conditions?
 
     // tmp->addColor(color);
@@ -59,10 +59,10 @@ void AssetFactory::createArea(struct object_data data) {
     this->models.push_back(tmp);
 }
 
-void AssetFactory::createPoint(struct object_data data, std::string texture, std::vector<float>* verts, std::vector<float>* texCoords) {
+void AssetFactory::createPoint(struct object_data data, std::string texture, std::vector<float>* verts, std::vector<float>* texCoords, std::vector<float>* normals) {
     // creates a pointy object
 
-    auto m = new ModelStaticPoint(data.coords.back(), verts, texCoords);
+    auto m = new ModelStaticPoint(data.coords.back(), verts, texCoords, normals);
     if (data.props.contains("direction"))
         m->setDirection(std::stoi(data.props["direction"]));
     m->addTexture(this->textures[texture]);

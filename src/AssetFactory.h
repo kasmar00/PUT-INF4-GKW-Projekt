@@ -27,7 +27,7 @@ class AssetFactory {
     void createBuilding(struct object_data data);
     void createGrass(struct object_data data);
     void createArea(struct object_data data);
-    void createPoint(struct object_data data, std::string texture, std::vector<float>* verts, std::vector<float>* texCoords);
+    void createPoint(struct object_data data, std::string texture, std::vector<float>* verts, std::vector<float>* texCoords, std::vector<float>* normals);
 };
 
 #endif  // __ASSETFACTORY_H__

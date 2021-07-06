@@ -12,12 +12,14 @@ class ModelStaticPoint : public ModelStatic {
     float height;
     int direction;
 
-   public:
+    std::vector<float> *normals;
     std::vector<float> *verts;
     std::vector<float> *texCoords;
+
+   public:
     int vertexCount;
 
-    ModelStaticPoint(glm::vec2 pos, std::vector<float> *verts, std::vector<float> *colors);
+    ModelStaticPoint(glm::vec2 pos, std::vector<float> *verts, std::vector<float> *texCoords, std::vector<float> *normals);
     virtual ~ModelStaticPoint(){};
     void draw(glm::mat4 M);
 

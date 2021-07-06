@@ -6,6 +6,7 @@
 #include "libs/shaderprogram.h"
 
 extern ShaderProgram* spColored;
+extern ShaderProgram* spSkyBox;
 
 void initShaders();
 void freeShaders();

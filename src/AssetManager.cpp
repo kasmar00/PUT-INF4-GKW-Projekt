@@ -42,7 +42,6 @@ void AssetManager::generate_models_from_path(std::string path) {
     auto lampObj_all = this->ass_loader.loadObj("models/bylamp.obj");
     auto lampObj = lampObj_all[0];
     auto kloszObj = lampObj_all[1];
-    
 
     //bez tego \/\/ jest  segfault a mi za mało płacą żeby go naprawiać efektywniej ¯\_(ツ)_/¯
     std::vector<float>* treeVerts = new std::vector<float>(treeObj[asl::v]);

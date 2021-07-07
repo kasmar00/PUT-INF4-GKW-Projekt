@@ -68,3 +68,10 @@ void AssetFactory::createPoint(struct object_data data, std::string texture, std
     m->addTexture(this->textures[texture]);
     this->models.push_back(m);
 }
+
+void AssetFactory::createDirt(struct object_data data) {
+    // creates grass
+    auto* tmp = new ModelStaticPlanar(data.coords, -0.1f);
+    tmp->addTexture(this->textures["dirt"]);
+    this->models.push_back(tmp);
+}

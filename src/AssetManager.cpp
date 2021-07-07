@@ -36,6 +36,12 @@ void AssetManager::generate_models_from_path(std::string path) {
         factory.createArea(i);
     }
 
+    auto tmp = this->data_loader.load_planar_file(path + "/dump");
+    factory.addTexture("dirt", this->ass_loader.loadTexture("textures/dirt.png"));
+    for (auto i : tmp) {
+        factory.createDirt(i);
+    }
+
     //OBJ loading
     //TODO: because there's no better place
     auto treeObj = this->ass_loader.loadObj("models/suzanne_tri.obj")[0];

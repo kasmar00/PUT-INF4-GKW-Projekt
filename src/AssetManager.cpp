@@ -4,6 +4,7 @@
 #include "ModelStaticArea.h"
 #include "ModelStaticPlanar.h"
 #include "ModelStaticPoint.h"
+#include "SkyBox.h"
 
 AssetManager::AssetManager() {
     printf("Constructed asset manager!\n");
@@ -34,6 +35,12 @@ void AssetManager::generate_models_from_path(std::string path) {
     factory.addTexture("area", this->ass_loader.loadTexture("textures/metal.png"));
     for (auto i : data_areas) {
         factory.createArea(i);
+    }
+
+    auto tmp = this->data_loader.load_planar_file(path + "/dump");
+    factory.addTexture("dirt", this->ass_loader.loadTexture("textures/dirt.png"));
+    for (auto i : tmp) {
+        factory.createDirt(i);
     }
 
     //OBJ loading
@@ -84,6 +91,8 @@ void AssetManager::generate_models_from_path(std::string path) {
     }
 
     this->models = factory.getModels();
+
+    SkyBox::GetIntstance()->addTexture(ass_loader.loadTexture("textures/skybox.png"));
 
     //This asserts length of every load
     this->sanity_check_load();

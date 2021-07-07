@@ -13,6 +13,7 @@
 
 #include "ModelStaticArea.h"
 #include "ModelStaticPoint.h"
+#include "SkyBox.h"
 #include "callbacks.h"
 #include "constants.h"
 #include "shader.h"
@@ -139,6 +140,8 @@ void Renderer::drawScene() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  //Wyczyść bufor koloru i bufor głębokości
     glClearColor(0.5, .9, .5, 1);
 
+    spColored->use();
+
     glm::mat4 V = glm::lookAt(pos, pos + calcDir(rot.x, rot.y), glm::vec3(0.0f, 1.0f, 0.0f));  //macierz widoku
     glm::mat4 P = glm::perspective(glm::radians(50.0f), aspectRatio, 1.0f, 500.0f);            //macierz rzutowania
     glUniformMatrix4fv(spColored->u("P"), 1, false, glm::value_ptr(P));                        //ładowanie macierzy rzutowania
@@ -150,5 +153,10 @@ void Renderer::drawScene() {
     for (auto i : this->assetManager->models) {
         i->draw(glm::mat4(1.0f));
     }
+
+    spSkyBox->use();
+    glUniformMatrix4fv(spSkyBox->u("P"), 1, false, glm::value_ptr(P));  //ładowanie macierzy rzutowania
+    glUniformMatrix4fv(spSkyBox->u("V"), 1, false, glm::value_ptr(V));  //ładowanie macierzy widoku
+    SkyBox::GetIntstance()->draw();
     glfwSwapBuffers(window);  //Skopiuj bufor tylny do bufora przedniego
 }

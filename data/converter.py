@@ -11,7 +11,7 @@ import string
 csvsep = "|"
 
 interestingAreaProps = ["building", "landuse",
-                        "height", "building:levels", "area:highway", "building:part", "building:min_level"]
+                        "height", "building:levels", "area:highway", "building:part", "building:min_level", "leisure"]
 interestingPointProps = ["highway", "natural",
                          "amenity", "height", "direction"]
 
@@ -82,8 +82,10 @@ def prepere(dump):
                 benches[1].append(y)
                 benches["prop"].append(thisprop)
 
-    centerx = (max(objx)+min(objx))/2
-    centery = (max(objy)+min(objy))/2
+    # centerx = (max(objx)+min(objx))/2
+    # centery = (max(objy)+min(objy))/2
+    centerx = sum(objx)/len(objx)
+    centery = sum(objy)/len(objy)
     trees[0] = [x-centerx for x in trees[0]]
     trees[1] = [y-centery for y in trees[1]]
     lights[0] = [x-centerx for x in lights[0]]
@@ -94,6 +96,14 @@ def prepere(dump):
     for i in range(len(all)):
         all[i][0] = [x-centerx for x in all[i][0]]
         all[i][1] = [y-centery for y in all[i][1]]
+
+# this is a dirty hack for dirt
+    minx, maxx = min(objx)-centerx, max(objx)-centerx
+    miny, maxy = min(objy)-centery, max(objy)-centery
+
+    all.append([[minx, maxx, maxx, minx, minx], [miny, miny, maxy, maxy, miny], {
+                "landuse": "dirt", "building:levels": "-1"}])
+# this is an edn of dirty hack for dirt
 
     points = {"trees": trees, "lights": lights, "benches": benches}
     ret = {"areas": all, "points": points}
@@ -144,8 +154,8 @@ def exportPoints(file, obj):
 
 
 def export(data, path):
-    path += ''.join(random.choices(string.ascii_uppercase +
-                                   string.digits, k=15))
+    # path += ''.join(random.choices(string.ascii_uppercase +
+    #                                string.digits, k=15))
     try:
         os.mkdir(path)
     except OSError:
@@ -161,6 +171,8 @@ def export(data, path):
         if "building" in i[2].keys() or "building:part" in i[2].keys():
             file = buildings
         elif i[2].get("landuse") == "grass":
+            file = grass
+        elif i[2].get("leisure") == "garden":
             file = grass
         elif "area:highway" in i[2].keys():
             file = areas

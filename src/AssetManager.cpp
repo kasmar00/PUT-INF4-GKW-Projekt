@@ -64,13 +64,14 @@ void AssetManager::generate_models_from_path(std::string path) {
     std::vector<float>* kloszNormals = new std::vector<float>(kloszObj[asl::vn]);
 
     //pointy data
+    factory.addTexture("bench", this->ass_loader.loadTexture("textures/bench.png"));
+
     this->data_trees = this->data_loader.load_point_file(path + "/trees");
     for (auto i : data_trees) {
-        factory.createPoint(i, "building", treeVerts, treeTexture, treeNormals);
-        factory.createPoint(i, "building", coronaVerts, coronaTexture, coronaNormals);
+        factory.createPoint(i, "bench", treeVerts, treeTexture, treeNormals);
+        factory.createPoint(i, "grass", coronaVerts, coronaTexture, coronaNormals);
     }
     this->data_benches = this->data_loader.load_point_file(path + "/benches");
-    factory.addTexture("bench", this->ass_loader.loadTexture("textures/bench.png"));
     for (auto i : data_benches) {
         factory.createPoint(i, "bench", benchVerts, benchTexture, benchNormals);
     }

@@ -4,6 +4,7 @@
 #include "ModelStaticArea.h"
 #include "ModelStaticPlanar.h"
 #include "ModelStaticPoint.h"
+#include "SkyBox.h"
 
 AssetManager::AssetManager() {
     printf("Constructed asset manager!\n");
@@ -74,6 +75,8 @@ void AssetManager::generate_models_from_path(std::string path) {
     }
 
     this->models = factory.getModels();
+
+    SkyBox::GetIntstance()->addTexture(ass_loader.loadTexture("textures/skybox.png"));
 
     //This asserts length of every load
     this->sanity_check_load();

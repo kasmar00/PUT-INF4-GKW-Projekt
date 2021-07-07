@@ -90,7 +90,22 @@ void AssetManager::generate_models_from_path(std::string path) {
         factory.createPoint(i, "light", kloszVerts, kloszTexture, kloszNormals);
     }
 
+    auto ufo_all = this->ass_loader.loadObj("models/ufo.obj");
+    auto ufo_body = ufo_all[0];
+    auto ufo_beam = ufo_all[1];
+    std::vector<float>* ufoVerts = new std::vector<float>(ufo_body[asl::v]);
+    std::vector<float>* ufoTexture = new std::vector<float>(ufo_body[asl::vt]);
+    std::vector<float>* ufoNormals = new std::vector<float>(ufo_body[asl::vn]);
+    std::vector<float>* beamVerts = new std::vector<float>(ufo_beam[asl::v]);
+    std::vector<float>* beamTexture = new std::vector<float>(ufo_beam[asl::vt]);
+    std::vector<float>* beamNormals = new std::vector<float>(ufo_beam[asl::vn]);
+
+    factory.addTexture("beam", this->ass_loader.loadTexture("textures/beam.png"));
+    factory.createDynamic("bench", ufoVerts, ufoTexture, ufoNormals);
+    factory.createDynamic("beam", beamVerts, beamTexture, beamNormals);
+
     this->models = factory.getModels();
+    this->modelDyn = factory.getDynModels();
 
     SkyBox::GetIntstance()->addTexture(ass_loader.loadTexture("textures/skybox.png"));
 

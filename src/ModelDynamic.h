@@ -1,6 +1,8 @@
 #ifndef __MODELDYNAMIC_H__
 #define __MODELDYNAMIC_H__
 
+#include <GL/glew.h>
+
 #include <glm/glm.hpp>
 #include <utility>
 #include <vector>
@@ -19,17 +21,18 @@ class ModelDynamic : public Model {
     float timer;
 
    public:
-    std::vector<float> bodyVerts;
-    std::vector<float> bodyColors;
-    std::vector<float> wheelVerts;
-    std::vector<float> wheelColors;
+    std::vector<float>* verts;
+    std::vector<float>* texCoords;
+    std::vector<float>* normals;
+    int vertexCount;
+    GLuint tex;
+
     std::vector<std::pair<float, float>> map;
     int bodyVertexCount, wheelVertexCount;
 
-    ModelDynamic(glm::vec2 pos);
+    ModelDynamic(glm::vec2 pos, GLuint texture, std::vector<float>* verts, std::vector<float>* texCoords, std::vector<float>* normals);
     ~ModelDynamic(){};
     void draw(glm::mat4 M);
-    void drawWheel(glm::mat4 M);
 
     void setHeight(float height);
     void setDirection(int direction);

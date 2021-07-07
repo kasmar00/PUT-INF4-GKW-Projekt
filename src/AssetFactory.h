@@ -5,17 +5,22 @@
 
 // #include "AssetLoader.h"
 #include "DataLoader.h"
+#include "ModelDynamic.h"
 #include "ModelStatic.h"
 
 class AssetFactory {
    private:
     std::vector<ModelStatic*> models;
+    std::vector<ModelDynamic*> modelDyn;
     std::unordered_map<std::string, GLuint> textures;
     // std::unordered_map<std::string, asl::mesh> meshes;
 
    public:
     std::vector<ModelStatic*> getModels() {
         return this->models;
+    };
+    std::vector<ModelDynamic*> getDynModels() {
+        return this->modelDyn;
     };
     void addTexture(std::string name, GLuint texture) {
         this->textures[name] = texture;
@@ -31,6 +36,7 @@ class AssetFactory {
     void createDirt(struct object_data data);
 
     void createPoint(struct object_data data, std::string texture, std::vector<float>* verts, std::vector<float>* texCoords, std::vector<float>* normals);
+    void createDynamic(std::string texture, std::vector<float>* verts, std::vector<float>* texCoords, std::vector<float>* normals);
 };
 
 #endif  // __ASSETFACTORY_H__

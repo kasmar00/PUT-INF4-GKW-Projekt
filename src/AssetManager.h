@@ -5,6 +5,7 @@
 
 #include "AssetLoader.h"
 #include "DataLoader.h"
+#include "ModelDynamic.h"
 #include "ModelStatic.h"
 
 class AssetManager {
@@ -23,6 +24,7 @@ class AssetManager {
 
    public:
     std::vector<ModelStatic*> models;
+    std::vector<ModelDynamic*> modelDyn;
     AssetManager();
     ~AssetManager();
     void sanity_check_load();

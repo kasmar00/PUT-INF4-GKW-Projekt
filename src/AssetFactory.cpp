@@ -20,7 +20,7 @@ void AssetFactory::createBuilding(struct object_data data) {
     ModelStaticArea* walls = new ModelStaticArea(data.coords, minheight, maxheight);
 
     ModelStaticPlanar* roof = new ModelStaticPlanar(data.coords, maxheight);
-    roof->addTexture(this->textures["building"]);
+    roof->addTexture(this->textures["roof"]);
     this->models.push_back(roof);
 
     ModelStaticPlanar* floor = new ModelStaticPlanar(data.coords, minheight);

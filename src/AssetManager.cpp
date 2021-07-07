@@ -19,12 +19,13 @@ void AssetManager::generate_models_from_path(std::string path) {
 
     this->data_buildings = this->data_loader.load_planar_file(path + "/buildings");
     factory.addTexture("building", this->ass_loader.loadTexture("textures/bricks.png"));
+    factory.addTexture("roof", this->ass_loader.loadTexture("textures/roof.png"));
     for (auto i : data_buildings) {
         factory.createBuilding(i);
     }
 
     this->data_grass = this->data_loader.load_planar_file(path + "/grass");
-    factory.addTexture("grass", this->ass_loader.loadTexture("textures/Grass.png"));
+    factory.addTexture("grass", this->ass_loader.loadTexture("textures/grass.png"));
     for (auto i : data_grass) {
         factory.createGrass(i);
     }

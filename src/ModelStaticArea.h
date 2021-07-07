@@ -10,6 +10,7 @@ class ModelStaticArea : public ModelStatic {
     std::vector<glm::vec2> coords;
     std::vector<glm::vec4> verts;
     std::vector<glm::vec2> textureCoords;
+    std::vector<glm::vec4> normals;
 
     float maxHeight;
     float minHeight;

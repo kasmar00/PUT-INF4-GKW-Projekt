@@ -15,14 +15,15 @@
 #include "constants.h"
 #include "shader.h"
 
-ModelStaticPoint::ModelStaticPoint(glm::vec2 pos, std::vector<float> *verts, std::vector<float> *colors) {
+ModelStaticPoint::ModelStaticPoint(glm::vec2 pos, std::vector<float> *verts, std::vector<float> *texCoords, std::vector<float> *normals) {
     this->locationX = pos.x;
     this->locationY = pos.y;
     this->height = 2;
     this->direction = rand() % 360;
 
     this->verts = verts;
-    this->texCoords = colors;
+    this->texCoords = texCoords;
+    this->normals = normals;
     this->vertexCount = verts->size() / 4;
 }
 
@@ -42,11 +43,16 @@ void ModelStaticPoint::draw(glm::mat4 M) {
 
     glUniformMatrix4fv(spColored->u("M"), 1, false, glm::value_ptr(M));  //ładowanie macierzy modelu
 
+    glUniform4f(spColored->u("color"), color.r, color.g, color.b, color.a);
+
     glEnableVertexAttribArray(spColored->a("vertex"));
     glVertexAttribPointer(spColored->a("vertex"), 4, GL_FLOAT, false, 0, this->verts->data());
 
     glEnableVertexAttribArray(spColored->a("texCoord"));
     glVertexAttribPointer(spColored->a("texCoord"), 2, GL_FLOAT, false, 0, this->texCoords->data());
+
+    glEnableVertexAttribArray(spColored->a("normal"));
+    glVertexAttribPointer(spColored->a("normal"), 4, GL_FLOAT, false, 0, this->normals->data());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, this->tex);
@@ -56,4 +62,5 @@ void ModelStaticPoint::draw(glm::mat4 M) {
 
     glDisableVertexAttribArray(spColored->a("vertex"));
     glDisableVertexAttribArray(spColored->a("texCoord"));
+    glDisableVertexAttribArray(spColored->a("normal"));
 }

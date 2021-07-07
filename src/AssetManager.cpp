@@ -64,14 +64,16 @@ void AssetManager::generate_models_from_path(std::string path) {
         factory.createPoint(i, "building", treeVerts, treeTexture, treeNormals);
     }
     this->data_benches = this->data_loader.load_point_file(path + "/benches");
+    factory.addTexture("bench", this->ass_loader.loadTexture("textures/bench.png"));
     for (auto i : data_benches) {
-        factory.createPoint(i, "building", benchVerts, benchTexture, benchNormals);
+        factory.createPoint(i, "bench", benchVerts, benchTexture, benchNormals);
     }
 
     this->data_lamps = this->data_loader.load_point_file(path + "/lights");
+    factory.addTexture("light", this->ass_loader.loadTexture("textures/light.png"));
     for (auto i : data_lamps) {
-        factory.createPoint(i, "building", lampVerts, lampTexture, lampNormals);
-        factory.createPoint(i, "building", kloszVerts, kloszTexture, kloszNormals);
+        factory.createPoint(i, "area", lampVerts, lampTexture, lampNormals);
+        factory.createPoint(i, "light", kloszVerts, kloszTexture, kloszNormals);
     }
 
     this->models = factory.getModels();

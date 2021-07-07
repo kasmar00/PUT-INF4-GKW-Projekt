@@ -70,7 +70,7 @@ void AssetManager::generate_models_from_path(std::string path) {
 
     this->models = factory.getModels();
 
-    SkyBox::GetIntstance()->addTexture(ass_loader.loadTexture("textures/bricks.png"));
+    SkyBox::GetIntstance()->addTexture(ass_loader.loadTexture("textures/skybox.png"));
 
     //This asserts length of every load
     this->sanity_check_load();

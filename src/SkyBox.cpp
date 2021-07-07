@@ -14,147 +14,84 @@ SkyBox* SkyBox::skybox_ = nullptr;
 
 SkyBox::SkyBox() {
     float myCubeVertices[] = {
-        //Ściana 1
-        1.0f, -1.0f, -1.0f, 1.0f,
+        //A
+        -1.0f, -1.0f, 1.0f, 1.0f,
+        -1.0f, -1.0f, -1.0f, 1.0f,
+        -1.0f, 1.0f, -1.0f, 1.0f,
+        -1.0f, -1.0f, 1.0f, 1.0f,
+        -1.0f, 1.0f, -1.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f, 1.0f,
+        //B
         -1.0f, 1.0f, -1.0f, 1.0f,
         -1.0f, -1.0f, -1.0f, 1.0f,
-
+        1.0f, -1.0f, -1.0f, 1.0f,
+        -1.0f, 1.0f, -1.0f, 1.0f,
         1.0f, -1.0f, -1.0f, 1.0f,
         1.0f, 1.0f, -1.0f, 1.0f,
-        -1.0f, 1.0f, -1.0f, 1.0f,
-
-        //Ściana 2
+        //C
+        1.0f, 1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, -1.0f, 1.0f,
+        1.0f, -1.0f, -1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f, 1.0f,
+        1.0f, -1.0f, -1.0f, 1.0f,
+        1.0f, -1.0f, 1.0f, 1.0f,
+        //D
+        -1.0f, -1.0f, 1.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f, 1.0f,
         -1.0f, -1.0f, 1.0f, 1.0f,
         1.0f, 1.0f, 1.0f, 1.0f,
         1.0f, -1.0f, 1.0f, 1.0f,
-
-        -1.0f, -1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 1.0f,
-
-        // //Ściana 3
-        // -1.0f, -1.0f, -1.0f, 1.0f,
-        // 1.0f, -1.0f, 1.0f, 1.0f,
-        // 1.0f, -1.0f, -1.0f, 1.0f,
-
-        // -1.0f, -1.0f, -1.0f, 1.0f,
-        // -1.0f, -1.0f, 1.0f, 1.0f,
-        // 1.0f, -1.0f, 1.0f, 1.0f,
-
-        //Ściana 4
-        -1.0f, 1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, -1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 1.0f,
-
+        //E
         -1.0f, 1.0f, 1.0f, 1.0f,
         -1.0f, 1.0f, -1.0f, 1.0f,
         1.0f, 1.0f, -1.0f, 1.0f,
-
-        //Ściana 5
-        -1.0f, -1.0f, -1.0f, 1.0f,
         -1.0f, 1.0f, 1.0f, 1.0f,
-        -1.0f, -1.0f, 1.0f, 1.0f,
-
-        -1.0f, -1.0f, -1.0f, 1.0f,
-        -1.0f, 1.0f, -1.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f, 1.0f,
-
-        //Ściana 6
-        1.0f, -1.0f, 1.0f, 1.0f,
         1.0f, 1.0f, -1.0f, 1.0f,
-        1.0f, -1.0f, -1.0f, 1.0f,
-
-        1.0f, -1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, -1.0f, 1.0f
+        1.0f, 1.0f, 1.0f, 1.0f
 
     };
 
     float myCubeTexCoords[] = {
-        //Ściana 1
-        1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-
-        //Ściana 2
-        1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-
-        // //Ściana 3
-        // 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        // 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-
-        //Ściana 4
-        1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-
-        //Ściana 5
-        1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-
-        //Ściana 6
-        1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f};
-
-    float myCubeNormals[] = {
-        //Ściana 1
-        0.0f, 0.0f, -1.0f, 0.0f,
-        0.0f, 0.0f, -1.0f, 0.0f,
-        0.0f, 0.0f, -1.0f, 0.0f,
-
-        0.0f, 0.0f, -1.0f, 0.0f,
-        0.0f, 0.0f, -1.0f, 0.0f,
-        0.0f, 0.0f, -1.0f, 0.0f,
-
-        //Ściana 2
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-
-        //Ściana 3
-        // 0.0f, -1.0f, 0.0f, 0.0f,
-        // 0.0f, -1.0f, 0.0f, 0.0f,
-        // 0.0f, -1.0f, 0.0f, 0.0f,
-
-        // 0.0f, -1.0f, 0.0f, 0.0f,
-        // 0.0f, -1.0f, 0.0f, 0.0f,
-        // 0.0f, -1.0f, 0.0f, 0.0f,
-
-        //Ściana 4
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-
-        //Ściana 5
-        -1.0f, 0.0f, 0.0f, 0.0f,
-        -1.0f, 0.0f, 0.0f, 0.0f,
-        -1.0f, 0.0f, 0.0f, 0.0f,
-
-        -1.0f, 0.0f, 0.0f, 0.0f,
-        -1.0f, 0.0f, 0.0f, 0.0f,
-        -1.0f, 0.0f, 0.0f, 0.0f,
-
-        //Ściana 6
-        1.0f, 0.0f, 0.0f, 0.0f,
-        1.0f, 0.0f, 0.0f, 0.0f,
-        1.0f, 0.0f, 0.0f, 0.0f,
-
-        1.0f, 0.0f, 0.0f, 0.0f,
-        1.0f, 0.0f, 0.0f, 0.0f,
-        1.0f, 0.0f, 0.0f, 0.0f
+        zero_____, two_third,
+        zero_____, one_third,
+        one_third, one_third,
+        zero_____, two_third,
+        one_third, one_third,
+        one_third, two_third,
+        //B
+        one_third, one_third,
+        one_third, zero_____,
+        two_third, zero_____,
+        one_third, one_third,
+        two_third, zero_____,
+        two_third, one_third,
+        //C
+        two_third, two_third,
+        two_third, one_third,
+        one______, one_third,
+        two_third, two_third,
+        one______, one_third,
+        one______, two_third,
+        //D
+        one_third, one______,
+        one_third, two_third,
+        two_third, two_third,
+        one_third, one______,
+        two_third, two_third,
+        two_third, one______,
+        //E
+        one_third, two_third,
+        one_third, one_third,
+        two_third, one_third,
+        one_third, two_third,
+        two_third, one_third,
+        two_third, two_third
 
     };
 
     for (int i = 0; i < 120; i++) {
         this->verts.push_back(myCubeVertices[i]);
-        this->normals.push_back(myCubeNormals[i]);
     }
     for (int i = 0; i < 60; i++) {
         this->texCoords.push_back(myCubeTexCoords[i]);
@@ -178,7 +115,7 @@ void SkyBox::addTexture(GLuint texture) {
 void SkyBox::draw() {
     glm::mat4 M = glm::mat4(1);
     M = glm::translate(M, glm::vec3(Renderer::pos.x, 99.9, Renderer::pos.z));  //przeniesienie w miejsce docelowe
-    M = glm::scale(M, glm::vec3(250, 100, 250));
+    M = glm::scale(M, glm::vec3(250, 250, 250));
 
     glUniform4f(spSkyBox->u("color"), 1, 1, 1, 1);
 

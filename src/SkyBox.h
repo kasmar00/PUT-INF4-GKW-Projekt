@@ -6,6 +6,11 @@
 
 #include <vector>
 
+#define zero_____ 0.0f
+#define one_third 0.334f
+#define two_third 0.666f
+#define one______ 1.0f
+
 class SkyBox {
    private:
     GLuint tex;

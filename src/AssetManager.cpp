@@ -20,12 +20,13 @@ void AssetManager::generate_models_from_path(std::string path) {
 
     this->data_buildings = this->data_loader.load_planar_file(path + "/buildings");
     factory.addTexture("building", this->ass_loader.loadTexture("textures/bricks.png"));
+    factory.addTexture("roof", this->ass_loader.loadTexture("textures/roof.png"));
     for (auto i : data_buildings) {
         factory.createBuilding(i);
     }
 
     this->data_grass = this->data_loader.load_planar_file(path + "/grass");
-    factory.addTexture("grass", this->ass_loader.loadTexture("textures/Grass.png"));
+    factory.addTexture("grass", this->ass_loader.loadTexture("textures/grass.png"));
     for (auto i : data_grass) {
         factory.createGrass(i);
     }
@@ -44,34 +45,49 @@ void AssetManager::generate_models_from_path(std::string path) {
 
     //OBJ loading
     //TODO: because there's no better place
-    auto treeObj = this->ass_loader.loadObj("models/suzanne_tri.obj")[0];
+    auto tree_all = this->ass_loader.loadObj("models/smalltree.obj");
+    auto treeObj = tree_all[0];
+    auto coronaObj = tree_all[1];
     auto benchObj = this->ass_loader.loadObj("models/bench_tri.obj")[0];
-    auto lampObj = this->ass_loader.loadObj("models/flaga.obj")[0];
+    auto lampObj_all = this->ass_loader.loadObj("models/bylamp.obj");
+    auto lampObj = lampObj_all[0];
+    auto kloszObj = lampObj_all[1];
 
     //bez tego \/\/ jest  segfault a mi za mało płacą żeby go naprawiać efektywniej ¯\_(ツ)_/¯
     std::vector<float>* treeVerts = new std::vector<float>(treeObj[asl::v]);
     std::vector<float>* treeTexture = new std::vector<float>(treeObj[asl::vt]);  //if everything loaded-change to texture
     std::vector<float>* treeNormals = new std::vector<float>(treeObj[asl::vn]);
+    std::vector<float>* coronaVerts = new std::vector<float>(coronaObj[asl::v]);
+    std::vector<float>* coronaTexture = new std::vector<float>(coronaObj[asl::vt]);  //if everything loaded-change to texture
+    std::vector<float>* coronaNormals = new std::vector<float>(coronaObj[asl::vn]);
     std::vector<float>* benchVerts = new std::vector<float>(benchObj[asl::v]);
     std::vector<float>* benchTexture = new std::vector<float>(benchObj[asl::vt]);
     std::vector<float>* benchNormals = new std::vector<float>(benchObj[asl::vn]);
     std::vector<float>* lampVerts = new std::vector<float>(lampObj[asl::v]);
     std::vector<float>* lampTexture = new std::vector<float>(lampObj[asl::vt]);
     std::vector<float>* lampNormals = new std::vector<float>(lampObj[asl::vn]);
+    std::vector<float>* kloszVerts = new std::vector<float>(kloszObj[asl::v]);
+    std::vector<float>* kloszTexture = new std::vector<float>(kloszObj[asl::vt]);
+    std::vector<float>* kloszNormals = new std::vector<float>(kloszObj[asl::vn]);
 
     //pointy data
+    factory.addTexture("bench", this->ass_loader.loadTexture("textures/bench.png"));
+
     this->data_trees = this->data_loader.load_point_file(path + "/trees");
     for (auto i : data_trees) {
-        factory.createPoint(i, "building", treeVerts, treeTexture, treeNormals);
+        factory.createPoint(i, "bench", treeVerts, treeTexture, treeNormals);
+        factory.createPoint(i, "grass", coronaVerts, coronaTexture, coronaNormals);
     }
     this->data_benches = this->data_loader.load_point_file(path + "/benches");
     for (auto i : data_benches) {
-        factory.createPoint(i, "building", benchVerts, benchTexture, benchNormals);
+        factory.createPoint(i, "bench", benchVerts, benchTexture, benchNormals);
     }
 
     this->data_lamps = this->data_loader.load_point_file(path + "/lights");
+    factory.addTexture("light", this->ass_loader.loadTexture("textures/light.png"));
     for (auto i : data_lamps) {
-        factory.createPoint(i, "building", lampVerts, lampTexture, lampNormals);
+        factory.createPoint(i, "area", lampVerts, lampTexture, lampNormals);
+        factory.createPoint(i, "light", kloszVerts, kloszTexture, kloszNormals);
     }
 
     this->models = factory.getModels();
@@ -85,7 +101,7 @@ void AssetManager::generate_models_from_path(std::string path) {
 std::vector<glm::vec4> AssetManager::getLamps() {
     std::vector<glm::vec4> tmp;
     for (auto i : this->data_lamps)
-        tmp.push_back(glm::vec4(i.coords.back().x, 6, i.coords.back().y, 1));
+        tmp.push_back(glm::vec4(i.coords.back().x, 6.6, i.coords.back().y, 1));
     return tmp;
 }
 

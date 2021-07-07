@@ -97,6 +97,14 @@ def prepere(dump):
         all[i][0] = [x-centerx for x in all[i][0]]
         all[i][1] = [y-centery for y in all[i][1]]
 
+# this is a dirty hack for dirt
+    minx, maxx = min(objx)-centerx, max(objx)-centerx
+    miny, maxy = min(objy)-centery, max(objy)-centery
+
+    all.append([[minx, maxx, maxx, minx, minx], [miny, miny, maxy, maxy, miny], {
+                "landuse": "dirt", "building:levels": "-1"}])
+# this is an edn of dirty hack for dirt
+
     points = {"trees": trees, "lights": lights, "benches": benches}
     ret = {"areas": all, "points": points}
     return ret

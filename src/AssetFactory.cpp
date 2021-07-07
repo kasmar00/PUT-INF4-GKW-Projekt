@@ -1,5 +1,6 @@
 #include "AssetFactory.h"
 
+#include "ModelDynamic.h"
 #include "ModelStaticArea.h"
 #include "ModelStaticPlanar.h"
 #include "ModelStaticPoint.h"
@@ -74,4 +75,9 @@ void AssetFactory::createDirt(struct object_data data) {
     auto* tmp = new ModelStaticPlanar(data.coords, -0.1f);
     tmp->addTexture(this->textures["dirt"]);
     this->models.push_back(tmp);
+}
+
+void AssetFactory::createDynamic(std::string texture, std::vector<float>* verts, std::vector<float>* texCoords, std::vector<float>* normals) {
+    auto* tmp = new ModelDynamic(glm::vec2(-140, -50), this->textures[texture], verts, texCoords, normals);
+    this->modelDyn.push_back(tmp);
 }

@@ -38,7 +38,9 @@ void AssetManager::generate_models_from_path(std::string path) {
 
     //OBJ loading
     //TODO: because there's no better place
-    auto treeObj = this->ass_loader.loadObj("models/suzanne_tri.obj")[0];
+    auto tree_all = this->ass_loader.loadObj("models/smalltree.obj");
+    auto treeObj = tree_all[0];
+    auto coronaObj = tree_all[1];
     auto benchObj = this->ass_loader.loadObj("models/bench_tri.obj")[0];
     auto lampObj_all = this->ass_loader.loadObj("models/bylamp.obj");
     auto lampObj = lampObj_all[0];
@@ -48,6 +50,9 @@ void AssetManager::generate_models_from_path(std::string path) {
     std::vector<float>* treeVerts = new std::vector<float>(treeObj[asl::v]);
     std::vector<float>* treeTexture = new std::vector<float>(treeObj[asl::vt]);  //if everything loaded-change to texture
     std::vector<float>* treeNormals = new std::vector<float>(treeObj[asl::vn]);
+    std::vector<float>* coronaVerts = new std::vector<float>(coronaObj[asl::v]);
+    std::vector<float>* coronaTexture = new std::vector<float>(coronaObj[asl::vt]);  //if everything loaded-change to texture
+    std::vector<float>* coronaNormals = new std::vector<float>(coronaObj[asl::vn]);
     std::vector<float>* benchVerts = new std::vector<float>(benchObj[asl::v]);
     std::vector<float>* benchTexture = new std::vector<float>(benchObj[asl::vt]);
     std::vector<float>* benchNormals = new std::vector<float>(benchObj[asl::vn]);
@@ -62,6 +67,7 @@ void AssetManager::generate_models_from_path(std::string path) {
     this->data_trees = this->data_loader.load_point_file(path + "/trees");
     for (auto i : data_trees) {
         factory.createPoint(i, "building", treeVerts, treeTexture, treeNormals);
+        factory.createPoint(i, "building", coronaVerts, coronaTexture, coronaNormals);
     }
     this->data_benches = this->data_loader.load_point_file(path + "/benches");
     factory.addTexture("bench", this->ass_loader.loadTexture("textures/bench.png"));

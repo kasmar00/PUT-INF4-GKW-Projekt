@@ -1,5 +1,8 @@
 # Computer Graphics and Visualization Project
 
+![](./Screenshot1.png)
+![](./Screenshot2.png)
+
 ## Compilation
 
 Target system: Linux (Ubuntu)

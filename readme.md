@@ -1,5 +1,7 @@
 # Computer Graphics and Visualization Project
 
+Authors: Jan Bylicki, Jan Chlebek, Marcin Kasznia
+
 ![](./Screenshot1.png)
 ![](./Screenshot2.png)
 
@@ -36,6 +38,8 @@ Files:
 
 
 # Grafika Komputerowa i Wizualizacja Projekt
+
+Autorzy: Jan Bylicki, Jan Chlebek, Marcin Kasznia
 
 ## Kompilacja
 

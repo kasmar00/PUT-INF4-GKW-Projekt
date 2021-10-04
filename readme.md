@@ -12,6 +12,7 @@ Target system: Linux (Ubuntu)
    - `cgal` (apt: `libcgal-dev`)
 2. Compile in the root directory using `$ make`
 3. Run with `$ make run`
+4. To visualize OSM data you need to import it using documentation from `data/` 
 
 ## Project structure
 
@@ -45,6 +46,7 @@ Docelowy system / Target system: Linux (Ubuntu)
    - `cgal` (apt: `libcgal-dev`)
 2. Kompiluj w głównym katalogu przy pomocy `$ make`
 3. Uruchom przy pomocy `$ make run`
+4. Do zwizualizowania danych pochodzących z OSM niezbędne jest zaimportowanie ich z wykorzystaniem instrukcji znajdującej się w `data/`
 
 ## Struktura projektu
 
